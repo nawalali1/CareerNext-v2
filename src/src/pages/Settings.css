@@ -1,0 +1,134 @@
+.settings-container {
+    display: flex;
+    width: 100%;
+    min-height: calc(100vh - 70px);
+    background: #f7f9fc;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* Sidebar */
+  .settings-nav {
+    width: 220px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .settings-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .settings-nav li {
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .settings-nav li:hover {
+    background: #eef6fc;
+  }
+  
+  .settings-nav li.active {
+    background: #007c91;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  /* Main */
+  .settings-main {
+    flex: 1;
+    padding: 2rem;
+  }
+  
+  .settings-card {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .settings-card h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #007c91;
+    font-size: 1.6rem;
+  }
+  
+  .settings-card label {
+    display: block;
+    margin-top: 1.2rem;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+  
+  .settings-card input[type="text"],
+  .settings-card input[type="password"],
+  .settings-card select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .settings-card .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.2rem 0;
+  }
+  
+  .settings-card button {
+    margin-top: 1.8rem;
+    background-color: #007c91;
+    color: #ffffff;
+    border: none;
+    padding: 0.85rem 1.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease;
+  }
+  
+  .settings-card button:hover {
+    background-color: #005f6b;
+  }
+  
+  .settings-card button.danger {
+    background-color: #e11d48;
+  }
+  
+  .settings-card button.danger:hover {
+    background-color: #b50f35;
+  }
+  
+  .settings-message {
+    margin-top: 1rem;
+    padding: 0.85rem 1.25rem;
+    background: #eef6fc;
+    color: #005f6b;
+    border-radius: 4px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .settings-container {
+      flex-direction: column;
+    }
+    .settings-nav {
+      width: 100%;
+      display: flex;
+      overflow-x: auto;
+    }
+    .settings-nav ul {
+      display: flex;
+      gap: 1rem;
+    }
+    .settings-main {
+      padding: 1rem;
+    }
+  }
+  
