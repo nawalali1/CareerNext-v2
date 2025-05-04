@@ -1,11 +1,10 @@
 // src/firebase.js
 
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
 
-// Optional: only include this if you're using Analytics
-// import { getAnalytics, isSupported } from 'firebase/analytics';
-
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAQ4aeTcrT144jAoalXhOZxuUa_J3VkT4M",
   authDomain: "careernext-f1dd7.firebaseapp.com",
@@ -18,14 +17,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
-// Export Firebase services
+// Export auth instance
 export const auth = getAuth(app);
-// If you're using Analytics and want to conditionally enable:
-// if (typeof window !== 'undefined') {
-//   isSupported().then((supported) => {
-//     if (supported) getAnalytics(app);
-//   });
-// }
-
 export default app;

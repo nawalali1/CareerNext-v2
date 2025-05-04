@@ -1,3 +1,4 @@
+// src/pages/Settings.js
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import {
@@ -15,26 +16,16 @@ export default function Settings() {
   const user = auth.currentUser;
 
   const [activeTab, setActiveTab] = useState('Profile');
-
-  // PROFILE
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [profileMsg, setProfileMsg] = useState('');
-
-  // SECURITY
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [securityMsg, setSecurityMsg] = useState('');
-
-  // NOTIFICATIONS
   const [jobAlerts, setJobAlerts] = useState(false);
   const [weeklySummary, setWeeklySummary] = useState(false);
-
-  // PREFERENCES
   const [language, setLanguage] = useState('en');
   const [country, setCountry] = useState('gb');
   const [prefMsg, setPrefMsg] = useState('');
-
-  // PRIVACY
   const [deleteMsg, setDeleteMsg] = useState('');
 
   useEffect(() => {
