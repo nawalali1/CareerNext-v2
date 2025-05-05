@@ -1,13 +1,15 @@
 // src/pages/login.js
-
-import Navbar from "../components/Navbar";
-import LoginForm from "../components/Login";
+import Head from 'next/head'
+import Login from '../components/Login'
 
 export default function LoginPage() {
   return (
     <>
-      <Navbar />
-      <LoginForm />
+      <Head>
+        <title>Log In</title>
+        <meta name="description" content="Log in to CareerNext" />
+      </Head>
+      <Login />
     </>
-  );
+  )
 }

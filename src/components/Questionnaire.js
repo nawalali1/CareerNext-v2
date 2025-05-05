@@ -1,78 +1,70 @@
-// wherever your Questionnaire component lives (e.g. src/pages/Questionnaire.js)
+// src/components/Questionnaire.js
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 
-import { useState } from "react";
+const questions = [
+  {
+    question: "Which activity energizes you the most?",
+    options: [
+      "Solving complex problems",
+      "Expressing ideas visually or verbally",
+      "Helping others achieve their goals",
+      "Organizing systems or processes",
+    ],
+  },
+  // … (rest of your v1 questions array here)
+]
 
 export default function Questionnaire() {
-  // --- adjust these questions to match your own ---
-  const questions = [
-    "What subjects do you enjoy most?",
-    "Do you prefer working with people or data?",
-    "How much do you value creativity?",
-    "Do you like leading teams or following instructions?",
-    "Would you rather work indoors or outdoors?",
-  ];
+  const [current, setCurrent] = useState(0)
+  const [answers, setAnswers] = useState(Array(questions.length).fill(null))
+  const router = useRouter()
 
-  const [answers, setAnswers] = useState(Array(questions.length).fill(""));
-  const [feedback, setFeedback] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (idx) => (e) => {
-    const copy = [...answers];
-    copy[idx] = e.target.value;
-    setAnswers(copy);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (answers.some((a) => !a.trim())) return;
-    setLoading(true);
-    setFeedback("");
-    try {
-      const res = await fetch("/api/questionnaireFeedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers }),
-      });
-      const { text, error } = await res.json();
-      setFeedback(error ? `Error: ${JSON.stringify(error)}` : text);
-    } catch (err) {
-      setFeedback("Request failed: " + err.message);
-    } finally {
-      setLoading(false);
+  const handleNext = () => {
+    if (current === questions.length - 1) {
+      router.push({
+        pathname: '/results',
+        query: { answers: JSON.stringify(answers) },
+      })
+    } else {
+      setCurrent((c) => c + 1)
     }
-  };
+  }
+
+  const handleBack = () => {
+    if (current > 0) setCurrent((c) => c - 1)
+  }
+
+  const selectOption = (opt) => {
+    const newAns = [...answers]
+    newAns[current] = opt
+    setAnswers(newAns)
+  }
 
   return (
-    <main style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
-      <h1>Career Questionnaire</h1>
-      <form onSubmit={handleSubmit}>
-        {questions.map((q, i) => (
-          <div key={i} style={{ marginBottom: 16 }}>
-            <label>
-              <strong>{q}</strong>
-              <input
-                type="text"
-                value={answers[i]}
-                onChange={handleChange(i)}
-                style={{ display: "block", width: "100%", marginTop: 4 }}
-              />
-            </label>
-          </div>
+    <div className="questionnaire-container">
+      <h2>{questions[current].question}</h2>
+      <div className="options-list">
+        {questions[current].options.map((option) => (
+          <label key={option}>
+            <input
+              type="radio"
+              name="option"
+              checked={answers[current] === option}
+              onChange={() => selectOption(option)}
+            />
+            {option}
+          </label>
         ))}
-        <button
-          type="submit"
-          disabled={loading || answers.some((a) => !a.trim())}
-        >
-          {loading ? "Thinking…" : "Get AI Feedback"}
+      </div>
+      <div className="navigation-buttons">
+        <button onClick={handleBack} disabled={current === 0}>
+          Back
         </button>
-      </form>
-
-      {feedback && (
-        <section style={{ marginTop: 24 }}>
-          <h2>AI Recommendation</h2>
-          <p style={{ whiteSpace: "pre-wrap" }}>{feedback}</p>
-        </section>
-      )}
-    </main>
-  );
+        <button onClick={handleNext}>
+          {current === questions.length - 1 ? 'Submit' : 'Next'}
+        </button>
+      </div>
+    </div>
+  )
 }

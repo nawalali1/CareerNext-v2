@@ -1,20 +1,4 @@
-/* ------------ GLOBAL RESET ------------ */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f7f9fc;
-  color: #111827;
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ------------ WRAPPER ------------ */
+/* ---------- HOME WRAPPER (v1 App.css) ---------- */
 .home-wrapper {
   max-width: 1200px;
   margin: 100px auto;
@@ -22,7 +6,7 @@ body {
   animation: fadeIn 0.4s ease;
 }
 
-/* ------------ INTRO SECTION ------------ */
+/* ---------- INTRO SECTION ---------- */
 .intro-section {
   text-align: center;
   margin-bottom: 3rem;
@@ -42,7 +26,7 @@ body {
   margin: 0 auto;
 }
 
-/* ------------ USER PATHWAY CARDS ------------ */
+/* ---------- USER PATHWAY CARDS ---------- */
 .user-pathways {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -88,19 +72,7 @@ body {
   box-shadow: 0 6px 16px rgba(63, 81, 181, 0.2);
 }
 
-/* ------------ ANIMATIONS ------------ */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ------------ RESPONSIVE ------------ */
+/* ---------- RESPONSIVE ADJUSTMENTS ---------- */
 @media (max-width: 768px) {
   .intro-section h1 {
     font-size: 2rem;

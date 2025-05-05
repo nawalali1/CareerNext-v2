@@ -1,62 +1,47 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/firebase';
+// src/components/Signup.js
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
-const Signup = () => {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+export default function Signup() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const router = useRouter()
+  const auth = getAuth()
 
   const handleSignup = async (e) => {
-    e.preventDefault();
-    console.log('Signup clicked', { email, password });
-    setError(''); // Clear previous error
-
+    e.preventDefault()
+    setError('')
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push('/questionnaire');
-    } catch (error) {
-      console.error('Signup failed:', error);
-      if (error.code === 'auth/email-already-in-use') {
-        setError('This email is already in use. Try logging in.');
-      } else if (error.code === 'auth/invalid-email') {
-        setError('Invalid email format.');
-      } else if (error.code === 'auth/weak-password') {
-        setError('Password should be at least 6 characters.');
-      } else {
-        setError('Signup failed. Please try again.');
-      }
+      await createUserWithEmailAndPassword(auth, email, password)
+      router.push('/login')
+    } catch (err) {
+      setError(err.message)
     }
-  };
+  }
 
   return (
     <div className="signup-container">
-      <h2>Signup</h2>
+      <h2>Sign Up</h2>
       <form onSubmit={handleSignup}>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Create a password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         <button type="submit">Sign Up</button>
       </form>
-
-      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+      {error && <p className="signup-error">{error}</p>}
     </div>
-  );
-};
-
-export default Signup;
+  )
+}

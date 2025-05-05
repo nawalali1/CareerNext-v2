@@ -1,37 +1,54 @@
 // src/pages/api/chat.js
-
-import { GoogleGenAI } from "@google/genai";
-
-const ai = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_API_KEY,
-});
+import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST allowed" });
-  }
-  const { message } = req.body;
-  if (!message || typeof message !== "string") {
-    return res.status(400).json({ error: "Missing or invalid message" });
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).end('Method Not Allowed');
   }
 
-  const prompt = [
-    "You are an expert resume and CV coach.",
-    "Help the user craft better bullet points for their resume.",
-    `User: ${message}`,
-    "Coach:"
-  ].join("\n");
+  const { message } = req.body;
+  if (typeof message !== 'string' || !message.trim()) {
+    return res.status(400).json({ error: 'Invalid message payload' });
+  }
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-001",
-      contents: prompt,
+    // Use the Google Generative Language API endpoint for Gemini
+    const apiKey = process.env.GEMINI_API_KEY;
+    const url = `https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=${apiKey}`;
+
+    const apiRes = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: {
+          messages: [
+            { author: 'system', content: 'You are a helpful AI assistant.' },
+            { author: 'user', content: message }
+          ]
+        },
+        temperature: 0.7,
+        top_k: 40,
+        top_p: 0.9,
+        candidate_count: 1
+      })
     });
-    return res.status(200).json({ text: response.text });
-  } catch (e) {
-    console.error("Chat API error:", e);
-    return res
-      .status(500)
-      .json({ error: "Internal error", detail: e.toString() });
+
+    if (!apiRes.ok) {
+      const errText = await apiRes.text();
+      console.error('Gemini API error:', errText);
+      throw new Error(errText);
+    }
+
+    const payload = await apiRes.json();
+    // Extract the assistant reply
+    const reply =
+      payload.candidates?.[0]?.content?.trim() ||
+      'Sorry, I didn’t get that.';
+
+    return res.status(200).json({ text: reply });
+  } catch (err) {
+    console.error('❌ /api/chat error:', err);
+    return res.status(500).json({ error: 'AI backend request failed.' });
   }
 }

@@ -1,46 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import Navbar from './Navbar';
+// src/components/Results.js
+import { useRouter } from 'next/router'
 
 export default function Results() {
-  const router = useRouter();
-  const { recs } = router.query;
-  const [recommendations, setRecommendations] = useState([]);
-  const [error, setError] = useState('Loading recommendations…');
+  const router = useRouter()
+  const { answers } = router.query
+  const parsed = answers ? JSON.parse(answers) : []
 
-  useEffect(() => {
-    if (!recs) return;
-
-    try {
-      const parsed = JSON.parse(decodeURIComponent(recs));
-      if (!Array.isArray(parsed)) {
-        throw new Error('Invalid format');
-      }
-      setRecommendations(parsed);
-      setError('');
-    } catch (e) {
-      console.error('Results parse error:', e);
-      setError('Failed to load recommendations.');
-    }
-  }, [recs]);
+  // your existing logic for filtering/displaying results based on parsed[]
 
   return (
     <div className="results-container">
-      <Navbar />
-
-      <h2>Your AI-Powered Career Recommendations</h2>
-
-      {error ? (
-        <p style={{ color: 'red' }}>{error}</p>
-      ) : (
-        <ul>
-          {recommendations.map((r, i) => (
-            <li key={i}>
-              <strong>{r.title}</strong>: {r.reason}
-            </li>
-          ))}
-        </ul>
-      )}
+      <h2>Your Career Matches</h2>
+      {/* map over your matches here */}
+      <button onClick={() => router.push('/')}>Back to Home</button>
     </div>
-  );
+  )
 }

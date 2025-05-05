@@ -1,232 +1,78 @@
 /* src/styles/CVBuilder.css */
-
-/* 1) Layout grid */
-.cvbuilder-page {
-  display: grid;
-  grid-template-columns: 240px 1fr 280px;
-  gap: 1rem;
-  padding: 1rem;
-  height: calc(100vh - 64px);
-  box-sizing: border-box;
-  background: #f5f6f8;
-  font-family: Arial, sans-serif;
-  color: #172b4d;
-  position: relative;
+.cv-builder {
+  display: flex;
+  height: 100vh;
+  background: #f4f6f9;
+  font-family: 'Inter', sans-serif;
 }
 
-/* 2) LEFT: Editor panel */
-.cvbuilder-left {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 1rem;
-  overflow-y: auto;
-}
-.cvbuilder-left h2 {
-  margin-top: 0;
-  font-size: 1.1rem;
-  font-weight: bold;
-}
-.acc-section {
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #eaeaea;
-}
-.acc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
-.acc-header h3 {
-  margin: 0;
-  font-size: 0.95rem;
-}
-.acc-header span {
-  font-size: 1.2rem;
-}
-.acc-content {
-  margin-top: 0.5rem;
-}
-.acc-content label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-.acc-content input,
-.acc-content textarea {
-  width: 100%;
-  padding: 0.4rem 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  box-sizing: border-box;
-}
-.exp-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-.exp-row input {
-  flex: 1;
-}
-.acc-content button {
-  background: #2684ff;
-  color: #fff;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-/* 3) CENTER: Paper */
-.cvbuilder-center {
-  background: none;
-  overflow-y: auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-.cvbuilder-paper {
-  background: #fff;
-  width: 100%;
-  max-width: 700px;
-  min-height: calc(100vh - 120px);
-  margin: 1rem 0;
+.cv-sidebar {
+  width: 280px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
   padding: 2rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  font-family: Georgia, serif;
-}
-.cvbuilder-paper h1 {
-  margin-top: 0;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-.cvbuilder-paper .contact {
-  color: #555;
-  font-size: 0.9rem;
-  margin: 0.5rem 0 1.5rem;
-}
-.cvbuilder-paper section {
-  margin-bottom: 1.5rem;
-}
-.cvbuilder-paper h2 {
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-  color: #2684ff;
-  border-bottom: 2px solid #2684ff;
-  padding-bottom: 0.2rem;
-}
-.cvbuilder-paper p,
-.cvbuilder-paper li {
-  margin: 0.4rem 0;
-  line-height: 1.4;
-}
-.cvbuilder-paper ul {
-  padding-left: 1.2rem;
-}
-.skills-list {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0;
-}
-.skills-list li {
-  background: #2684ff;
-  color: #fff;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-
-/* 4) RIGHT: Chat panel */
-.cvbuilder-right {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: 1rem;
 }
-.cvbuilder-right .panel-header {
-  background: #f0f1f3;
-  padding: 0.6rem 1rem;
-  border-bottom: 1px solid #eaeaea;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+.cv-sidebar h2 {
+  font-size: 1.5rem;
+  color: #111827;
+  margin-bottom: 1rem;
 }
-.cvbuilder-right .panel-header h2 {
-  margin: 0;
-  font-size: 1rem;
-}
-.cvbuilder-right .panel-header button {
-  background: none;
+
+.cv-sidebar button {
+  background-color: #4f46e5;
+  color: #fff;
   border: none;
-  font-size: 1.2rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
-.chat-panel {
+
+.cv-sidebar button:hover {
+  background-color: #4338ca;
+}
+
+.cv-sidebar .download-btn {
+  margin-top: auto;
+  background-color: #1f2937;
+}
+
+.cv-sidebar .download-btn:hover {
+  background-color: #111827;
+}
+
+.cv-preview {
   flex: 1;
-  padding: 1rem;
+  position: relative;
+  padding: 2rem;
   overflow-y: auto;
 }
-.chat-message {
-  margin-bottom: 0.75rem;
-  max-width: 80%;
-  line-height: 1.4;
-}
-.chat-message.ai {
-  background: #eaeaea;
-  padding: 0.6rem;
-  border-radius: 6px;
-  align-self: flex-start;
-}
-.chat-message.user {
-  background: #2684ff;
-  color: #fff;
-  padding: 0.6rem;
-  border-radius: 6px;
-  align-self: flex-end;
-}
-.chat-input-container {
-  display: flex;
-  border-top: 1px solid #eaeaea;
-}
-.chat-input-container input {
-  flex: 1;
-  border: none;
-  padding: 0.6rem;
-  font-size: 0.9rem;
-  outline: none;
-}
-.chat-input-container button {
-  background: #2684ff;
-  color: #fff;
-  border: none;
-  padding: 0 1rem;
-  cursor: pointer;
+
+.cv-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  min-height: 80vh;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
-/* 5) Print: only paper */
-@media print {
-  body * { visibility: hidden; }
-  .cvbuilder-paper {
-    visibility: visible;
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; margin: 0; padding: 0;
-    box-shadow: none;
-  }
+.assistant-hand-static {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  animation: float 2.5s ease-in-out infinite;
+  z-index: 10;
+  pointer-events: none;
 }
 
-/* 6) Responsive */
-@media (max-width: 900px) {
-  .cvbuilder-page {
-    grid-template-columns: 1fr;
-    height: auto;
-  }
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
 }

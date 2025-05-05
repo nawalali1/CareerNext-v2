@@ -1,24 +1,15 @@
-import Navbar from "../components/Navbar";
-import Link from "next/link";
+// src/pages/index.js
+import Head from 'next/head'
+import Home from '../components/Home'
 
-export default function Home() {
+export default function IndexPage() {
   return (
     <>
-      <Navbar />
-      <div className="home-container">
-        <div className="hero-card">
-          <h1>Find Your Path Forward</h1>
-          <p>For students, graduates, and professionals seeking clarity in the job market.</p>
-          <div className="hero-buttons">
-            <Link href="/questionnaire" legacyBehavior>
-              <button className="btn-primary">Get Started</button>
-            </Link>
-            <Link href="/cvbuilder" legacyBehavior>
-              <button className="btn-secondary">Build Your CV</button>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <Head>
+        <title>CareerNext</title>
+        <meta name="description" content="Find your best career path" />
+      </Head>
+      <Home />
     </>
-  );
+  )
 }

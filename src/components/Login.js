@@ -1,63 +1,47 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import Link from "next/link";
+// src/components/Login.js
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
-export default function LoginForm() {
-  const auth = getAuth();
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export default function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const router = useRouter()
+  const auth = getAuth()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setError('')
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/"); // redirect to home on success
+      await signInWithEmailAndPassword(auth, email, password)
+      router.push('/cvbuilder')
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     }
-  };
+  }
 
   return (
-    <main className="auth-container">
-      <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>Sign In</h1>
-        {error && <p className="auth-error">{error}</p>}
-
-        <label htmlFor="email">Email</label>
+    <div className="login-container">
+      <h2>Log In</h2>
+      <form onSubmit={handleLogin}>
         <input
-          id="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
-        <label htmlFor="password">Password</label>
         <input
-          id="password"
           type="password"
-          placeholder="••••••••"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        <button type="submit" className="btn-primary auth-submit">
-          Sign In
-        </button>
-
-        <p className="auth-footer">
-          Don’t have an account?{" "}
-          <Link href="/signup" legacyBehavior>
-            <a className="btn-secondary-link">Sign up</a>
-          </Link>
-        </p>
+        <button type="submit">Log In</button>
       </form>
-    </main>
-  );
+      {error && <p className="login-error">{error}</p>}
+    </div>
+  )
 }
