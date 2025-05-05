@@ -2,7 +2,7 @@
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
-  // Only allow POST
+  // Only POST allowed
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).end('Method Not Allowed');
@@ -13,36 +13,37 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid message payload' });
   }
 
-  // Read your key
-  const apiKey = process.env.GOOGLE_API_KEY;
-  if (!apiKey) {
-    console.error('Missing GOOGLE_API_KEY');
+  // Load your keys & project
+  const apiKey    = process.env.GOOGLE_API_KEY;
+  const project   = process.env.GCP_PROJECT;
+  const location  = process.env.GENAI_LOCATION || 'us-central1';
+
+  if (!apiKey || !project) {
+    console.error('Missing GOOGLE_API_KEY or GCP_PROJECT');
     return res.status(500).json({ error: 'Server misconfiguration' });
   }
 
-  // Use the v1 endpoint
-  const url = `https://generativelanguage.googleapis.com/v1/models/chat-bison-001:generateMessage?key=${apiKey}`;
+  // Project‐scoped endpoint
+  const url = `https://generativelanguage.googleapis.com/v1beta2/projects/${project}/locations/${location}/models/chat-bison-001:generateMessage?key=${apiKey}`;
 
-  // Build the payload with the correct field names
-  const body = {
+  const payload = {
     prompt: {
       messages: [
         { author: 'system', content: 'You are a helpful AI assistant.' },
-        { author: 'user', content: message },
+        { author: 'user',   content: message },
       ],
     },
-    temperature: 0.7,
-    // maxOutputTokens replaces candidate_count in v1
-    maxOutputTokens: 512,
-    topP: 0.9,
-    topK: 40,
+    temperature:     0.7,
+    top_k:           40,
+    top_p:           0.9,
+    candidate_count: 1,
   };
 
   try {
     const apiRes = await fetch(url, {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body:    JSON.stringify(payload),
     });
 
     const raw = await apiRes.text();
@@ -51,9 +52,9 @@ export default async function handler(req, res) {
       return res.status(502).json({ error: 'Upstream AI error', detail: raw });
     }
 
-    const json = JSON.parse(raw);
+    const { candidates } = JSON.parse(raw);
     const reply =
-      json.candidates?.[0]?.content?.trim() ||
+      candidates?.[0]?.content?.trim() ||
       'Sorry, I didn’t get a response from Gemini.';
 
     return res.status(200).json({ text: reply });
