@@ -1,53 +1,57 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { auth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import './Login.css';
 
-export default function Login() {
+export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/questionnaire');
+      router.push('/questionnaire');
     } catch (err) {
-      setError(err.message);
+      if (err.code === 'auth/user-not-found') {
+        setError('User not found. Please sign up first.');
+      } else if (err.code === 'auth/wrong-password') {
+        setError('Incorrect password. Please try again.');
+      } else {
+        setError('Login failed. Please try again.');
+      }
     }
   };
 
   return (
     <div className="login-container">
-      <div className="login-card">
-        <h1>Login to CareerNext</h1>
-        <p className="login-subtext">Welcome back! Please enter your credentials.</p>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-          <button type="submit">Login</button>
-          {error && <div className="login-error">{error}</div>}
-        </form>
-        <p>
-          Don’t have an account? <Link to="/signup">Sign up here</Link>
-        </p>
-      </div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          required
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Login</button>
+        {error && <p className="error">{error}</p>}
+      </form>
+      <p>
+        Don’t have an account?{' '}
+        <Link href="/signup">Sign up</Link>
+      </p>
     </div>
   );
 }

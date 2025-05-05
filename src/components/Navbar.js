@@ -1,54 +1,35 @@
-import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
-import './Navbar.css';
+// src/components/Navbar.js
 
-const Navbar = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const currentUser = auth.currentUser;
+import Link from "next/link";
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    navigate('/login', { replace: true });
+export default function Navbar() {
+  const linkStyle = {
+    color: "#ffffff",
+    fontWeight: 600,
+    textDecoration: "none",
   };
 
   return (
-    <nav className="navbar">
-      <div className="logo">
-        <span className="icon">⟶</span>
-        <span>CareerNext</span>
-      </div>
-      <ul className="nav-links">
-        <li className={location.pathname === '/' ? 'active' : ''}>
-          <Link to="/">Home</Link>
-        </li>
-        <li className={location.pathname === '/jobs' ? 'active' : ''}>
-          <Link to="/jobs">Live Jobs</Link>
-        </li>
-        <li className={location.pathname === '/cvbuilder' ? 'active' : ''}>
-          <Link to="/cvbuilder">CV Builder</Link>
-        </li>
-        {currentUser && (
-          <li className={location.pathname === '/settings' ? 'active' : ''}>
-            <Link to="/settings">Settings</Link>
-          </li>
-        )}
-        {currentUser ? (
-          <li>
-            <button className="nav-button" onClick={handleLogout}>
-              Logout
-            </button>
-          </li>
-        ) : (
-          <li className={location.pathname === '/login' ? 'active' : ''}>
-            <Link to="/login">Login</Link>
-          </li>
-        )}
-      </ul>
+    <nav
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "1.5rem",
+        padding: "1rem 2rem",
+        backgroundColor: "#3f51b5",
+      }}
+    >
+      <Link href="/" style={linkStyle}>
+        Home
+      </Link>
+
+      <Link href="/questionnaire" style={linkStyle}>
+        Questionnaire
+      </Link>
+
+      <Link href="/CVBuilder" style={linkStyle}>
+        CV Builder
+      </Link>
     </nav>
   );
-};
-
-export default Navbar;
+}

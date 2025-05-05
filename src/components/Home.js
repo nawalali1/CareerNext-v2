@@ -1,41 +1,34 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import Navbar from '@/components/Navbar';
+import Navbar from './Navbar';
 
 const Home = () => {
   const router = useRouter();
 
   return (
-    <div>
+    <div className="home-wrapper">
       <Navbar />
-      <div className="home-wrapper">
-        <section className="intro-section">
-          <h1>Find Your Ideal Career Path</h1>
-          <p className="intro-subtext">
-            Whether you're a student, a recent graduate, or exploring a new direction—CareerNext helps you discover what’s next.
-          </p>
-        </section>
 
-        <section className="user-pathways">
-          <div className="card">
-            <h2>🎓 Current Students</h2>
-            <p>Discover careers that match your degree or take our personality-based quiz to find your path.</p>
-            <button onClick={() => router.push('/questionnaire')}>Explore Pathways</button>
-          </div>
+      <section className="intro-section">
+        <h1>Welcome to CareerNext</h1>
+        <p className="intro-subtext">
+          Build a standout CV and discover your ideal career path with AI-powered guidance.
+        </p>
+      </section>
 
-          <div className="card">
-            <h2>🧑‍🎓 Graduates</h2>
-            <p>Use your existing qualifications and skills to explore real job matches and build a winning CV.</p>
-            <button onClick={() => router.push('/cv')}>Build My CV</button>
-          </div>
-
-          <div className="card">
-            <h2>🔄 Career Switchers</h2>
-            <p>Leverage your transferable skills and get recommendations tailored to a new career path.</p>
-            <button onClick={() => router.push('/questionnaire')}>Switch Careers</button>
-          </div>
-        </section>
+      <div className="cta-buttons">
+        <button onClick={() => router.push('/signup')}>Get Started</button>
+        <button onClick={() => router.push('/login')}>Login</button>
       </div>
+
+      <section className="employers">
+        <h2>Trusted by Top Employers</h2>
+        <p>
+          Thousands of professionals and leading companies trust CareerNext to build
+          professional CVs and find the best talent.
+        </p>
+        <button onClick={() => router.push('/contact')}>Contact Sales</button>
+      </section>
     </div>
   );
 };

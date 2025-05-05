@@ -1,115 +1,78 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import Navbar from './Navbar';
+// wherever your Questionnaire component lives (e.g. src/pages/Questionnaire.js)
 
-const questions = [
-  {
-    id: 1,
-    question: 'What kind of work environment do you prefer?',
-    options: ['Team-based', 'Independent', 'Remote', 'Fast-paced office'],
-  },
-  {
-    id: 2,
-    question: 'Which task appeals to you most?',
-    options: ['Solving complex problems', 'Designing user experiences', 'Analyzing data', 'Building a business'],
-  },
-  {
-    id: 3,
-    question: 'What motivates you in a career?',
-    options: ['High income', 'Creativity', 'Making impact', 'Job stability'],
-  },
-  {
-    id: 4,
-    question: 'How do you prefer to make decisions?',
-    options: ['Data-driven', 'Intuition', 'Peer feedback', 'Experimentation'],
-  },
-  {
-    id: 5,
-    question: 'What is your field of study or interest?',
-    options: ['Computer Science', 'Business', 'Design', 'Science/Research'],
-  },
-  {
-    id: 6,
-    question: 'What work-life balance do you value most?',
-    options: ['Strict 9-5', 'Flexible hours', 'Always learning', 'Entrepreneur lifestyle'],
-  },
-];
+import { useState } from "react";
 
 export default function Questionnaire() {
-  const [answers, setAnswers] = useState(Array(questions.length).fill(null));
-  const [current, setCurrent] = useState(0);
+  // --- adjust these questions to match your own ---
+  const questions = [
+    "What subjects do you enjoy most?",
+    "Do you prefer working with people or data?",
+    "How much do you value creativity?",
+    "Do you like leading teams or following instructions?",
+    "Would you rather work indoors or outdoors?",
+  ];
+
+  const [answers, setAnswers] = useState(Array(questions.length).fill(""));
+  const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const router = useRouter();
 
-  const choose = (option) => {
-    const newAnswers = [...answers];
-    newAnswers[current] = option;
-    setAnswers(newAnswers);
-
-    if (current === questions.length - 1) {
-      submit(newAnswers);
-    } else {
-      setCurrent(current + 1);
-    }
+  const handleChange = (idx) => (e) => {
+    const copy = [...answers];
+    copy[idx] = e.target.value;
+    setAnswers(copy);
   };
 
-  const submit = async (finalAnswers) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (answers.some((a) => !a.trim())) return;
     setLoading(true);
-    setError('');
-    console.log('Submitting answers:', finalAnswers);
-
+    setFeedback("");
     try {
-      const res = await fetch('/api/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: finalAnswers }),
+      const res = await fetch("/api/questionnaireFeedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers }),
       });
-      if (!res.ok) throw new Error(`Status ${res.status}`);
-      const { recommendations } = await res.json();
-      console.log('Received recommendations:', recommendations);
-
-      // Navigate to results page, passing both answers and recs
-      router.push({
-        pathname: '/results',
-        query: {
-          recs: encodeURIComponent(JSON.stringify(recommendations)),
-        },
-      });
-    } catch (e) {
-      console.error('Recommendation error:', e);
-      setError('Sorry, we couldn’t generate recommendations. Please try again.');
+      const { text, error } = await res.json();
+      setFeedback(error ? `Error: ${JSON.stringify(error)}` : text);
+    } catch (err) {
+      setFeedback("Request failed: " + err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const q = questions[current];
-
   return (
-    <div className="questionnaire-container">
-      <Navbar />
-
-      {loading ? (
-        <p className="loading">Analyzing your answers…</p>
-      ) : (
-        <>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-
-          <h2>{q.question}</h2>
-          <div className="options">
-            {q.options.map((opt, i) => (
-              <button key={i} onClick={() => choose(opt)}>
-                {opt}
-              </button>
-            ))}
+    <main style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
+      <h1>Career Questionnaire</h1>
+      <form onSubmit={handleSubmit}>
+        {questions.map((q, i) => (
+          <div key={i} style={{ marginBottom: 16 }}>
+            <label>
+              <strong>{q}</strong>
+              <input
+                type="text"
+                value={answers[i]}
+                onChange={handleChange(i)}
+                style={{ display: "block", width: "100%", marginTop: 4 }}
+              />
+            </label>
           </div>
+        ))}
+        <button
+          type="submit"
+          disabled={loading || answers.some((a) => !a.trim())}
+        >
+          {loading ? "Thinking…" : "Get AI Feedback"}
+        </button>
+      </form>
 
-          <p>
-            Question {current + 1} of {questions.length}
-          </p>
-        </>
+      {feedback && (
+        <section style={{ marginTop: 24 }}>
+          <h2>AI Recommendation</h2>
+          <p style={{ whiteSpace: "pre-wrap" }}>{feedback}</p>
+        </section>
       )}
-    </div>
+    </main>
   );
 }

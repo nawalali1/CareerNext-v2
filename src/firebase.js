@@ -1,10 +1,7 @@
 // src/firebase.js
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAQ4aeTcrT144jAoalXhOZxuUa_J3VkT4M",
   authDomain: "careernext-f1dd7.firebaseapp.com",
@@ -15,10 +12,10 @@ const firebaseConfig = {
   measurementId: "G-NTHNKP7FSK"
 };
 
-// Initialize Firebase
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
-// Export auth instance
+// Export Firebase Auth instance
 export const auth = getAuth(app);
+
 export default app;

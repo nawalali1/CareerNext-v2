@@ -1,198 +1,93 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Navbar from '../components/Navbar';
-import { jsPDF } from 'jspdf';
-import './CVBuilder.css';
+// src/pages/CVBuilder.js
 
-const defaultData = {
-  fullName: '',
-  title: '',
-  email: '',
-  phone: '',
-  location: '',
-  experience: [{ company: '', role: '', period: '', details: '' }],
-  education: [{ institution: '', degree: '', year: '' }],
-  skills: [''],
-};
+import { useState } from "react";
 
 export default function CVBuilder() {
-  const [data, setData] = useState(defaultData);
-  const [generatedText, setGeneratedText] = useState('');
+  const [chatInput, setChatInput] = useState("");
+  const [messages, setMessages] = useState([
+    { sender: "ai", text: "Hi! I can help you polish your CV. What would you like to improve?" },
+  ]);
   const [loading, setLoading] = useState(false);
-  const cvRef = useRef();
 
-  useEffect(() => {
-    const saved = localStorage.getItem('careerNextCV');
-    if (saved) setData(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('careerNextCV', JSON.stringify(data));
-  }, [data]);
-
-  const handleChange = (section, idx, field, value) => {
-    setData(prev => {
-      const clone = { ...prev };
-      if (Array.isArray(clone[section])) {
-        clone[section][idx][field] = value;
-      } else {
-        clone[section] = value;
-      }
-      return clone;
-    });
-  };
-
-  const addItem = section => {
-    setData(prev => {
-      const clone = { ...prev };
-      const template = defaultData[section][0];
-      clone[section] = [...clone[section], { ...template }];
-      return clone;
-    });
-  };
-
-  const addSkill = () =>
-    setData(prev => ({ ...prev, skills: [...prev.skills, ''] }));
-
-  const downloadPDF = () => {
-    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-    doc.html(cvRef.current, {
-      callback: () => doc.save('CareerNext_CV.pdf'),
-      x: 20,
-      y: 20,
-      html2canvas: { scale: 0.57 },
-    });
-  };
-
-  const generateCVContent = async () => {
+  const sendMessage = async () => {
+    if (!chatInput.trim()) return;
+    const userText = chatInput.trim();
+    setMessages((m) => [...m, { sender: "user", text: userText }]);
+    setChatInput("");
     setLoading(true);
+
     try {
-      const response = await fetch('/api/generatecv', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ data }),
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userText }),
       });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setGeneratedText(result.generatedText);
-      } else {
-        alert(result.error);
-      }
+      const { text, error } = await res.json();
+      setMessages((m) => [
+        ...m,
+        { sender: "ai", text: error ? `Error: ${JSON.stringify(error)}` : text },
+      ]);
     } catch (err) {
-      alert('Failed to generate CV text');
+      setMessages((m) => [...m, { sender: "ai", text: "Request failed: " + err.message }]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="cv-builder">
-        <div className="cv-sidebar">
-          <h2>Your Details</h2>
-          <label>Full Name</label>
-          <input
-            value={data.fullName}
-            onChange={e => handleChange('fullName', null, null, e.target.value)}
-          />
-          <label>Title</label>
-          <input
-            value={data.title}
-            onChange={e => handleChange('title', null, null, e.target.value)}
-          />
-          <label>Email</label>
-          <input
-            value={data.email}
-            onChange={e => handleChange('email', null, null, e.target.value)}
-          />
-          <label>Phone</label>
-          <input
-            value={data.phone}
-            onChange={e => handleChange('phone', null, null, e.target.value)}
-          />
-          <label>Location</label>
-          <input
-            value={data.location}
-            onChange={e => handleChange('location', null, null, e.target.value)}
-          />
-
-          <h3>Experience</h3>
-          {data.experience.map((exp, i) => (
-            <div key={i}>
-              <input placeholder="Company" value={exp.company} onChange={e => handleChange('experience', i, 'company', e.target.value)} />
-              <input placeholder="Role" value={exp.role} onChange={e => handleChange('experience', i, 'role', e.target.value)} />
-              <input placeholder="Period" value={exp.period} onChange={e => handleChange('experience', i, 'period', e.target.value)} />
-              <textarea placeholder="Details" value={exp.details} onChange={e => handleChange('experience', i, 'details', e.target.value)} />
+    <main style={{ padding: 20, maxWidth: 600, margin: "0 auto" }}>
+      <h1>CV Builder</h1>
+      {/* your existing CV form fields above… */}
+      <section style={{ marginTop: 40 }}>
+        <h2>AI CV Coach</h2>
+        <div
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: 4,
+            padding: 12,
+            height: 300,
+            overflowY: "auto",
+            background: "#fafafa",
+          }}
+        >
+          {messages.map((m, i) => (
+            <div
+              key={i}
+              style={{
+                textAlign: m.sender === "user" ? "right" : "left",
+                marginBottom: 8,
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  padding: "8px 12px",
+                  borderRadius: 16,
+                  background: m.sender === "user" ? "#0070f3" : "#e1e1e1",
+                  color: m.sender === "user" ? "#fff" : "#000",
+                  maxWidth: "80%",
+                }}
+              >
+                {m.text}
+              </span>
             </div>
           ))}
-          <button onClick={() => addItem('experience')}>+ Experience</button>
-
-          <h3>Education</h3>
-          {data.education.map((edu, i) => (
-            <div key={i}>
-              <input placeholder="Institution" value={edu.institution} onChange={e => handleChange('education', i, 'institution', e.target.value)} />
-              <input placeholder="Degree" value={edu.degree} onChange={e => handleChange('education', i, 'degree', e.target.value)} />
-              <input placeholder="Year" value={edu.year} onChange={e => handleChange('education', i, 'year', e.target.value)} />
-            </div>
-          ))}
-          <button onClick={() => addItem('education')}>+ Education</button>
-
-          <h3>Skills</h3>
-          {data.skills.map((skill, i) => (
-            <input key={i} placeholder="Skill" value={skill} onChange={e => {
-              const newSkills = [...data.skills];
-              newSkills[i] = e.target.value;
-              setData(prev => ({ ...prev, skills: newSkills }));
-            }} />
-          ))}
-          <button onClick={addSkill}>+ Skill</button>
-
-          <button className="generate-btn" onClick={generateCVContent} disabled={loading}>
-            {loading ? 'Generating...' : 'Generate CV Content'}
-          </button>
-
-          <button className="download-btn" onClick={downloadPDF}>
-            Download PDF
+        </div>
+        <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+          <input
+            type="text"
+            value={chatInput}
+            onChange={(e) => setChatInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            placeholder="Ask your CV coach…"
+            style={{ flexGrow: 1, padding: "8px 12px" }}
+            disabled={loading}
+          />
+          <button onClick={sendMessage} disabled={loading || !chatInput.trim()}>
+            {loading ? "…" : "Send"}
           </button>
         </div>
-
-        <div className="cv-preview" ref={cvRef}>
-          <div className="cv-content">
-            <h1>{data.fullName || 'Your Name'}</h1>
-            <h2>{data.title || 'Professional Title'}</h2>
-            <p>{data.email} | {data.phone} | {data.location}</p>
-
-            {generatedText && (
-              <section className="ai-generated-section">
-                <h3>AI-Generated CV Content</h3>
-                <p>{generatedText}</p>
-              </section>
-            )}
-
-            <h3>Experience</h3>
-            {data.experience.map((exp, i) => (
-              <div key={i}>
-                <strong>{exp.role}</strong> @ {exp.company} ({exp.period})
-                <p>{exp.details}</p>
-              </div>
-            ))}
-
-            <h3>Education</h3>
-            {data.education.map((edu, i) => (
-              <div key={i}>
-                <strong>{edu.degree}</strong>, {edu.institution} ({edu.year})
-              </div>
-            ))}
-
-            <h3>Skills</h3>
-            <ul>{data.skills.filter(Boolean).map((skill, i) => <li key={i}>{skill}</li>)}</ul>
-          </div>
-        </div>
-      </div>
-    </>
+      </section>
+    </main>
   );
 }
