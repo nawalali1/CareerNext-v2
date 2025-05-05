@@ -1,131 +1,50 @@
+/* Signup.css */
 
-.settings-wrapper {
-  display: flex;
-  max-width: 1200px;
-  margin: 2rem auto;
-  gap: 2rem;
-  font-family: 'Inter', sans-serif;
-  padding: 0 1rem;
-}
-
-.settings-sidebar {
-  width: 220px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.settings-sidebar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.settings-sidebar li {
-  padding: 1rem 1.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.settings-sidebar li:hover {
-  background-color: #f0faff;
-}
-
-.settings-sidebar li.active {
-  background-color: #e0f7fa;
-  font-weight: 600;
-  color: #007c91;
-}
-
-.settings-content {
-  flex: 1;
-}
-
-.settings-card {
-  background: #ffffff;
-  border-radius: 8px;
+.auth-container {
+  max-width: 400px;
+  margin: 3rem auto;
   padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-bottom: 2rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-family: 'Inter', sans-serif;
 }
 
-.settings-card h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #007c91;
+.auth-container h1 {
+  font-size: 1.75rem;
+  color: #172b4d;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.settings-card label {
+.auth-container label {
   display: block;
-  margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
-.settings-card input[type="text"],
-.settings-card input[type="password"],
-.settings-card select {
+.auth-container input {
   width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: 0.6rem;
+  border: 1px solid #dfe1e6;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
-.settings-card .toggle-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-}
-
-.settings-card button {
-  margin-top: 1.5rem;
-  background-color: #007c91;
-  color: #ffffff;
+.auth-container button {
+  width: 100%;
+  background: #2684ff;
+  color: #fff;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
+  font-size: 1rem;
+  transition: background 0.2s ease;
 }
 
-.settings-card button:hover {
-  background-color: #005f6b;
-}
-
-.settings-card button.danger {
-  background-color: #e11d48;
-}
-
-.settings-card button.danger:hover {
-  background-color: #b50f35;
-}
-
-.settings-message {
-  margin-top: 1rem;
-  padding: 0.75rem 1rem;
-  background: #e0f7fa;
-  color: #005f6b;
-  border-radius: 4px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .settings-wrapper {
-    flex-direction: column;
-  }
-  .settings-sidebar {
-    width: 100%;
-    display: flex;
-    overflow-x: auto;
-  }
-  .settings-sidebar ul {
-    display: flex;
-    gap: 1rem;
-  }
-  .settings-sidebar li {
-    flex: none;
-  }
+.auth-container button:hover {
+  background: #0065d6;
 }

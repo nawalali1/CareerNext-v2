@@ -3,20 +3,18 @@
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_API_KEY,  // make sure this is set in .env.local
+  apiKey: process.env.GOOGLE_API_KEY,
 });
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Only POST allowed" });
   }
-
   const { message } = req.body;
   if (!message || typeof message !== "string") {
     return res.status(400).json({ error: "Missing or invalid message" });
   }
 
-  // Build a simple prompt
   const prompt = [
     "You are an expert resume and CV coach.",
     "Help the user craft better bullet points for their resume.",

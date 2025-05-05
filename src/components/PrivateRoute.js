@@ -1,21 +1,32 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+// src/components/PrivateRoute.js
 
-export default function PrivateRoute({ user, element }) {
-  // 1) While we’re waiting for Firebase to tell us if there *is* a user, show a loader.
-  if (user === undefined) {
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { auth } from "../firebase";           // ← import the auth instance
+import { onAuthStateChanged } from "firebase/auth";
+
+export default function PrivateRoute({ children }) {
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Subscribe to auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.replace("/login");
+      } else {
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
+
+  if (loading) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <h2>Loading…</h2>
+      <div className="loading-screen">
+        <p>Loading...</p>
       </div>
     );
   }
-
-  // 2) If there *is* a user, render the protected page.
-  if (user) {
-    return element;
-  }
-
-  // 3) Otherwise, send them to login.
-  return <Navigate to="/login" replace />;
+  return children;
 }

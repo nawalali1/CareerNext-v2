@@ -1,197 +1,206 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Navbar from '../components/Navbar';
-import { jsPDF } from 'jspdf';
+// src/components/CVBuilder.js
 
-const defaultData = {
-  fullName: '',
-  title: '',
-  email: '',
-  phone: '',
-  location: '',
-  experience: [{ company: '', role: '', period: '', details: '' }],
-  education: [{ institution: '', degree: '', year: '' }],
-  skills: [''],
-};
+import React, { useState, useRef, useEffect } from "react";
+import ChatPanel from "./ChatPanel";
+
+function AccordionSection({ title, children }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className={`acc-section ${open ? "open" : ""}`}>
+      <div className="acc-header" onClick={() => setOpen(!open)}>
+        <h3>{title}</h3>
+        <span>{open ? "−" : "+"}</span>
+      </div>
+      {open && <div className="acc-content">{children}</div>}
+    </div>
+  );
+}
 
 export default function CVBuilder() {
-  const [data, setData] = useState(defaultData);
-  const [generatedText, setGeneratedText] = useState('');
-  const [loading, setLoading] = useState(false);
-  const cvRef = useRef();
+  // Form state
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [summary, setSummary] = useState("");
+  const [experience, setExperience] = useState([""]);
+  const [education, setEducation] = useState([""]);
+  const [skills, setSkills] = useState([""]);
 
+  // Chat toggle
+  const [showChat, setShowChat] = useState(true);
+
+  // Paper ref & sync
+  const paperRef = useRef(null);
+  const buildHTML = () => `
+    <h1>${name || "Your Name"}</h1>
+    <p class="contact">${email || "email@example.com"} | ${phone || "000-000-0000"}</p>
+    <section><h2>Professional Summary</h2><p>${summary}</p></section>
+    <section><h2>Experience</h2><ul>${experience
+      .filter((e) => e)
+      .map((e) => `<li>${e}</li>`)
+      .join("")}</ul></section>
+    <section><h2>Education</h2><ul>${education
+      .filter((e) => e)
+      .map((e) => `<li>${e}</li>`)
+      .join("")}</ul></section>
+    <section><h2>Skills</h2><ul class="skills-list">${skills
+      .filter((s) => s)
+      .map((s) => `<li>${s}</li>`)
+      .join("")}</ul></section>
+  `;
   useEffect(() => {
-    const saved = localStorage.getItem('careerNextCV');
-    if (saved) setData(JSON.parse(saved));
-  }, []);
+    if (paperRef.current) paperRef.current.innerHTML = buildHTML();
+  }, [name, email, phone, summary, experience, education, skills]);
 
-  useEffect(() => {
-    localStorage.setItem('careerNextCV', JSON.stringify(data));
-  }, [data]);
-
-  const handleChange = (section, idx, field, value) => {
-    setData(prev => {
-      const clone = { ...prev };
-      if (Array.isArray(clone[section])) {
-        clone[section][idx][field] = value;
-      } else {
-        clone[section] = value;
-      }
-      return clone;
-    });
+  // List handlers
+  const listHandler = (list, setList) => (i, val) => {
+    const copy = [...list];
+    copy[i] = val;
+    setList(copy);
   };
+  const addItem = (setList) => () => setList((l) => [...l, ""]);
+  const removeItem = (list, setList) => (i) =>
+    setList(list.filter((_, idx) => idx !== i));
 
-  const addItem = section => {
-    setData(prev => {
-      const clone = { ...prev };
-      const template = defaultData[section][0];
-      clone[section] = [...clone[section], { ...template }];
-      return clone;
-    });
-  };
-
-  const addSkill = () =>
-    setData(prev => ({ ...prev, skills: [...prev.skills, ''] }));
-
-  const downloadPDF = () => {
-    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-    doc.html(cvRef.current, {
-      callback: () => doc.save('CareerNext_CV.pdf'),
-      x: 20,
-      y: 20,
-      html2canvas: { scale: 0.57 },
-    });
-  };
-
-  const generateCVContent = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/generatecv', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ data }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setGeneratedText(result.generatedText);
-      } else {
-        alert(result.error);
-      }
-    } catch (err) {
-      alert('Failed to generate CV text');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Grid columns
+  const gridCols = showChat
+    ? "240px 1fr 280px"
+    : "240px 1fr";
 
   return (
-    <>
-      <Navbar />
-      <div className="cv-builder">
-        <div className="cv-sidebar">
-          <h2>Your Details</h2>
-          <label>Full Name</label>
-          <input
-            value={data.fullName}
-            onChange={e => handleChange('fullName', null, null, e.target.value)}
-          />
-          <label>Title</label>
-          <input
-            value={data.title}
-            onChange={e => handleChange('title', null, null, e.target.value)}
-          />
-          <label>Email</label>
-          <input
-            value={data.email}
-            onChange={e => handleChange('email', null, null, e.target.value)}
-          />
-          <label>Phone</label>
-          <input
-            value={data.phone}
-            onChange={e => handleChange('phone', null, null, e.target.value)}
-          />
-          <label>Location</label>
-          <input
-            value={data.location}
-            onChange={e => handleChange('location', null, null, e.target.value)}
-          />
+    <div
+      className="cvbuilder-page"
+      style={{ gridTemplateColumns: gridCols }}
+    >
+      {/* LEFT: Accordion CV Editor */}
+      <div className="cvbuilder-left">
+        <h2>CV Editor</h2>
 
-          <h3>Experience</h3>
-          {data.experience.map((exp, i) => (
-            <div key={i}>
-              <input placeholder="Company" value={exp.company} onChange={e => handleChange('experience', i, 'company', e.target.value)} />
-              <input placeholder="Role" value={exp.role} onChange={e => handleChange('experience', i, 'role', e.target.value)} />
-              <input placeholder="Period" value={exp.period} onChange={e => handleChange('experience', i, 'period', e.target.value)} />
-              <textarea placeholder="Details" value={exp.details} onChange={e => handleChange('experience', i, 'details', e.target.value)} />
+        <AccordionSection title="Personal Details">
+          <label>
+            Name
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </label>
+          <label>
+            Email
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+          <label>
+            Phone
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </label>
+        </AccordionSection>
+
+        <AccordionSection title="Professional Summary">
+          <textarea
+            rows={4}
+            value={summary}
+            onChange={(e) => setSummary(e.target.value)}
+            placeholder="A brief summary about yourself..."
+          />
+        </AccordionSection>
+
+        <AccordionSection title="Experience">
+          {experience.map((exp, i) => (
+            <div key={i} className="exp-row">
+              <input
+                type="text"
+                value={exp}
+                onChange={(e) =>
+                  listHandler(experience, setExperience)(i, e.target.value)
+                }
+                placeholder="Company — Role (Year–Year)"
+              />
+              <button
+                onClick={() => removeItem(experience, setExperience)(i)}
+              >
+                ✕
+              </button>
             </div>
           ))}
-          <button onClick={() => addItem('experience')}>+ Experience</button>
+          <button onClick={addItem(setExperience)}>+ Add Experience</button>
+        </AccordionSection>
 
-          <h3>Education</h3>
-          {data.education.map((edu, i) => (
-            <div key={i}>
-              <input placeholder="Institution" value={edu.institution} onChange={e => handleChange('education', i, 'institution', e.target.value)} />
-              <input placeholder="Degree" value={edu.degree} onChange={e => handleChange('education', i, 'degree', e.target.value)} />
-              <input placeholder="Year" value={edu.year} onChange={e => handleChange('education', i, 'year', e.target.value)} />
+        <AccordionSection title="Education">
+          {education.map((ed, i) => (
+            <div key={i} className="exp-row">
+              <input
+                type="text"
+                value={ed}
+                onChange={(e) =>
+                  listHandler(education, setEducation)(i, e.target.value)
+                }
+                placeholder="Degree — Institution (Year–Year)"
+              />
+              <button
+                onClick={() => removeItem(education, setEducation)(i)}
+              >
+                ✕
+              </button>
             </div>
           ))}
-          <button onClick={() => addItem('education')}>+ Education</button>
+          <button onClick={addItem(setEducation)}>+ Add Education</button>
+        </AccordionSection>
 
-          <h3>Skills</h3>
-          {data.skills.map((skill, i) => (
-            <input key={i} placeholder="Skill" value={skill} onChange={e => {
-              const newSkills = [...data.skills];
-              newSkills[i] = e.target.value;
-              setData(prev => ({ ...prev, skills: newSkills }));
-            }} />
+        <AccordionSection title="Skills">
+          {skills.map((sk, i) => (
+            <div key={i} className="exp-row">
+              <input
+                type="text"
+                value={sk}
+                onChange={(e) =>
+                  listHandler(skills, setSkills)(i, e.target.value)
+                }
+                placeholder="e.g. JavaScript"
+              />
+              <button onClick={() => removeItem(skills, setSkills)(i)}>
+                ✕
+              </button>
+            </div>
           ))}
-          <button onClick={addSkill}>+ Skill</button>
-
-          <button className="generate-btn" onClick={generateCVContent} disabled={loading}>
-            {loading ? 'Generating...' : 'Generate CV Content'}
-          </button>
-
-          <button className="download-btn" onClick={downloadPDF}>
-            Download PDF
-          </button>
-        </div>
-
-        <div className="cv-preview" ref={cvRef}>
-          <div className="cv-content">
-            <h1>{data.fullName || 'Your Name'}</h1>
-            <h2>{data.title || 'Professional Title'}</h2>
-            <p>{data.email} | {data.phone} | {data.location}</p>
-
-            {generatedText && (
-              <section className="ai-generated-section">
-                <h3>AI-Generated CV Content</h3>
-                <p>{generatedText}</p>
-              </section>
-            )}
-
-            <h3>Experience</h3>
-            {data.experience.map((exp, i) => (
-              <div key={i}>
-                <strong>{exp.role}</strong> @ {exp.company} ({exp.period})
-                <p>{exp.details}</p>
-              </div>
-            ))}
-
-            <h3>Education</h3>
-            {data.education.map((edu, i) => (
-              <div key={i}>
-                <strong>{edu.degree}</strong>, {edu.institution} ({edu.year})
-              </div>
-            ))}
-
-            <h3>Skills</h3>
-            <ul>{data.skills.filter(Boolean).map((skill, i) => <li key={i}>{skill}</li>)}</ul>
-          </div>
-        </div>
+          <button onClick={addItem(setSkills)}>+ Add Skill</button>
+        </AccordionSection>
       </div>
-    </>
+
+      {/* CENTER: Live CV “paper” */}
+      <div className="cvbuilder-center">
+        <div ref={paperRef} className="cvbuilder-paper" />
+      </div>
+
+      {/* RIGHT: Collapsible Chat */}
+      {showChat ? (
+        <div className="cvbuilder-right">
+          <div className="panel-header">
+            <h2>AI CV Coach</h2>
+            <button
+              className="toggle-btn"
+              onClick={() => setShowChat(false)}
+            >
+              ↔
+            </button>
+          </div>
+          <ChatPanel />
+        </div>
+      ) : (
+        <button
+          className="tab-btn right-tab"
+          onClick={() => setShowChat(true)}
+        >
+          AI CV Coach
+        </button>
+      )}
+    </div>
   );
 }
