@@ -1,4 +1,6 @@
 // src/components/ChatPanel.js
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 
 export default function ChatPanel() {
@@ -10,7 +12,7 @@ export default function ChatPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef(null);
 
-  // Auto-scroll on new messages
+  // Auto-scroll when messages or panel state changes
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -25,8 +27,8 @@ export default function ChatPanel() {
     const text = input.trim();
     if (!text || isLoading) return;
 
-    // Add user message locally
-    setMessages((msgs) => [...msgs, { from: 'user', text }]);
+    // Add user's message immediately
+    setMessages((prev) => [...prev, { from: 'user', text }]);
     setInput('');
     setIsLoading(true);
 
@@ -37,17 +39,26 @@ export default function ChatPanel() {
         body: JSON.stringify({ message: text }),
       });
 
+      // Parse JSON regardless of status
       const data = await res.json();
+
       if (!res.ok) {
-        throw new Error(data.error || `Status ${res.status}`);
+        // Instead of throwing, add error message to chat
+        const errMsg = data.error || data.text || `Error ${res.status}`;
+        setMessages((prev) => [
+          ...prev,
+          { from: 'bot', text: `⚠️ ${errMsg}` },
+        ]);
+        return;
       }
 
-      setMessages((msgs) => [...msgs, { from: 'bot', text: data.text }]);
+      // On success, append AI's reply
+      setMessages((prev) => [...prev, { from: 'bot', text: data.text }]);
     } catch (err) {
       console.error('ChatPanel error:', err);
-      setMessages((msgs) => [
-        ...msgs,
-        { from: 'bot', text: 'Sorry, I couldn’t process that right now.' },
+      setMessages((prev) => [
+        ...prev,
+        { from: 'bot', text: 'Sorry, something went wrong.' },
       ]);
     } finally {
       setIsLoading(false);
@@ -87,11 +98,7 @@ export default function ChatPanel() {
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
               disabled={isLoading}
             />
-            <button
-              onClick={sendMessage}
-              disabled={isLoading}
-              aria-label="Send message"
-            >
+            <button onClick={sendMessage} disabled={isLoading} aria-label="Send">
               ➤
             </button>
           </div>

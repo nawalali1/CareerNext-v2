@@ -2,6 +2,7 @@
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
+  // Only allow POST
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).end('Method Not Allowed');
@@ -12,43 +13,52 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid message payload' });
   }
 
-  try {
-    // Use the Google Generative Language API endpoint for Gemini
-    const apiKey = process.env.GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=${apiKey}`;
+  // Read your key
+  const apiKey = process.env.GOOGLE_API_KEY;
+  if (!apiKey) {
+    console.error('Missing GOOGLE_API_KEY');
+    return res.status(500).json({ error: 'Server misconfiguration' });
+  }
 
+  // Use the v1 endpoint
+  const url = `https://generativelanguage.googleapis.com/v1/models/chat-bison-001:generateMessage?key=${apiKey}`;
+
+  // Build the payload with the correct field names
+  const body = {
+    prompt: {
+      messages: [
+        { author: 'system', content: 'You are a helpful AI assistant.' },
+        { author: 'user', content: message },
+      ],
+    },
+    temperature: 0.7,
+    // maxOutputTokens replaces candidate_count in v1
+    maxOutputTokens: 512,
+    topP: 0.9,
+    topK: 40,
+  };
+
+  try {
     const apiRes = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt: {
-          messages: [
-            { author: 'system', content: 'You are a helpful AI assistant.' },
-            { author: 'user', content: message }
-          ]
-        },
-        temperature: 0.7,
-        top_k: 40,
-        top_p: 0.9,
-        candidate_count: 1
-      })
+      body: JSON.stringify(body),
     });
 
+    const raw = await apiRes.text();
     if (!apiRes.ok) {
-      const errText = await apiRes.text();
-      console.error('Gemini API error:', errText);
-      throw new Error(errText);
+      console.error('Gemini API error:', apiRes.status, raw);
+      return res.status(502).json({ error: 'Upstream AI error', detail: raw });
     }
 
-    const payload = await apiRes.json();
-    // Extract the assistant reply
+    const json = JSON.parse(raw);
     const reply =
-      payload.candidates?.[0]?.content?.trim() ||
-      'Sorry, I didn’t get that.';
+      json.candidates?.[0]?.content?.trim() ||
+      'Sorry, I didn’t get a response from Gemini.';
 
     return res.status(200).json({ text: reply });
   } catch (err) {
-    console.error('❌ /api/chat error:', err);
+    console.error('❌ /api/chat exception:', err);
     return res.status(500).json({ error: 'AI backend request failed.' });
   }
 }
