@@ -1,21 +1,26 @@
-// src/components/LoadingScreen.js
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-export default function LoadingScreen() {
-  const router = useRouter()
+
+function LoadingScreen() {
+  const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push('/')
-    }, 2000) // or whatever your v1 timing was
-    return () => clearTimeout(timer)
-  }, [])
+    const timeout = setTimeout(() => {
+      router.push("/results");
+    }, 2500);
+
+    return () => clearTimeout(timeout);
+  }, [router]);
 
   return (
     <div className="loading-screen">
-      <div className="spinner" /> {/* your CSS spinner */}
-      <p>Loading...</p>
+      <div className="loading-box">
+        <div className="loader" />
+        <h2>Analyzing your answers...</h2>
+      </div>
     </div>
-  )
+  );
 }
+
+export default LoadingScreen;

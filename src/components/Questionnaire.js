@@ -1,70 +1,135 @@
-// src/components/Questionnaire.js
-import { useState } from 'react'
-import { useRouter } from 'next/router'
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 const questions = [
   {
-    question: "Which activity energizes you the most?",
+    text: "What type of work feels the most fulfilling to you?",
     options: [
-      "Solving complex problems",
-      "Expressing ideas visually or verbally",
-      "Helping others achieve their goals",
-      "Organizing systems or processes",
+      "Solving complex problems or puzzles",
+      "Helping others improve or grow",
+      "Leading and making decisions",
+      "Creating or building things",
+      "Organizing systems or data",
+      "Exploring new ideas or technologies",
     ],
   },
-  // … (rest of your v1 questions array here)
-]
+  {
+    text: "What kind of day-to-day work environment energizes you most?",
+    options: [
+      "Fast-paced and dynamic",
+      "Calm, steady, and predictable",
+      "Collaborative and social",
+      "Independent and quiet",
+      "Structured with clear expectations",
+      "Flexible and constantly changing",
+    ],
+  },
+  {
+    text: "Which of these activities sounds most appealing long-term?",
+    options: [
+      "Developing software or digital tools",
+      "Managing people and leading teams",
+      "Conducting research and writing reports",
+      "Planning logistics or organizing workflows",
+      "Teaching, coaching, or mentoring",
+      "Designing, building, or crafting creative solutions",
+    ],
+  },
+  {
+    text: "What motivates you most at work?",
+    options: [
+      "Making a positive social impact",
+      "Earning a high income",
+      "Job stability and security",
+      "Autonomy and creative control",
+      "Recognition and upward mobility",
+      "Solving important, challenging problems",
+    ],
+  },
+  {
+    text: "How do you prefer to make decisions?",
+    options: [
+      "Based on data, logic, and facts",
+      "Based on gut feeling or instinct",
+      "By talking things through with others",
+      "Through trial-and-error",
+      "Slowly, with time and reflection",
+      "Quickly, based on past experience",
+    ],
+  },
+  {
+    text: "Which industries or fields are you naturally curious about?",
+    options: [
+      "Technology and software",
+      "Healthcare or mental health",
+      "Education or training",
+      "Business or finance",
+      "Creative industries (design, media, writing)",
+      "Government, policy, or law",
+    ],
+  },
+];
 
-export default function Questionnaire() {
-  const [current, setCurrent] = useState(0)
-  const [answers, setAnswers] = useState(Array(questions.length).fill(null))
-  const router = useRouter()
+function Questionnaire() {
+  const router = useRouter();
+  const [current, setCurrent] = useState(0);
+  const [answers, setAnswers] = useState(Array(questions.length).fill(""));
 
-  const handleNext = () => {
-    if (current === questions.length - 1) {
-      router.push({
-        pathname: '/results',
-        query: { answers: JSON.stringify(answers) },
-      })
+  const handleSelect = (option) => {
+    const updated = [...answers];
+    updated[current] = option;
+    setAnswers(updated);
+  };
+
+  const next = () => {
+    if (current < questions.length - 1) {
+      setCurrent(current + 1);
     } else {
-      setCurrent((c) => c + 1)
+      // TODO: save answers if needed
+      router.push("/loading");
     }
-  }
+  };
 
-  const handleBack = () => {
-    if (current > 0) setCurrent((c) => c - 1)
-  }
-
-  const selectOption = (opt) => {
-    const newAns = [...answers]
-    newAns[current] = opt
-    setAnswers(newAns)
-  }
+  const back = () => {
+    if (current > 0) setCurrent(current - 1);
+  };
 
   return (
     <div className="questionnaire-container">
-      <h2>{questions[current].question}</h2>
-      <div className="options-list">
-        {questions[current].options.map((option) => (
-          <label key={option}>
+      <h2>{questions[current].text}</h2>
+      <div className="progress">
+        Question {current + 1} of {questions.length}
+      </div>
+
+      <div className="options">
+        {questions[current].options.map((opt, idx) => (
+          <label
+            key={idx}
+            className={`option ${
+              answers[current] === opt ? "selected" : ""
+            }`}
+          >
             <input
               type="radio"
-              name="option"
-              checked={answers[current] === option}
-              onChange={() => selectOption(option)}
+              name={`q${current}`}
+              checked={answers[current] === opt}
+              onChange={() => handleSelect(opt)}
             />
-            {option}
+            {opt}
           </label>
         ))}
       </div>
+
       <div className="navigation-buttons">
-        <button onClick={handleBack} disabled={current === 0}>
+        <button onClick={back} disabled={current === 0}>
           Back
         </button>
-        <button onClick={handleNext}>
-          {current === questions.length - 1 ? 'Submit' : 'Next'}
+        <button onClick={next} disabled={!answers[current]}>
+          {current === questions.length - 1 ? "Submit" : "Next"}
         </button>
       </div>
     </div>
-  )
+  );
 }
+
+export default Questionnaire;

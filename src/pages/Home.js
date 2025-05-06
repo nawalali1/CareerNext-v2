@@ -1,34 +1,29 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Home.css';
+import React from "react";
+import { useRouter } from "next/router";
 
-const Home = () => {
-  const navigate = useNavigate();
-
-  const handleStart = (userType) => {
-    navigate('/questionnaire', { state: { userType } });
-  };
+function Home() {
+  const router = useRouter();
 
   return (
-    <div className="hero-wrapper">
-      <div className="hero-overlay">
-        <div className="hero-center">
-          <h1 className="hero-title">Find Your Path Forward</h1>
-          <p className="hero-subtext">
-            For students, graduates, and professionals seeking clarity in the job market.
+    <div className="home-background">
+      <div className="home-overlay" />
+
+      <div className="home-centered-card">
+        <div className="home-card animate-fade-in">
+          <h1 className="home-heading">CareerNext</h1>
+          <p className="home-subtext">
+            Discover personalized career paths based on your strengths.
+            <br />
+            Built for Students, Recent Graduates, and Career Switchers.
           </p>
 
-          <div className="hero-buttons">
-            <button onClick={() => handleStart('student')}>I'm a Student</button>
-            <button onClick={() => handleStart('graduate')}>I'm a Graduate</button>
-            <button onClick={() => handleStart('jobseeker')}>
-              Job Seeker / Career Changer
-            </button>
+          <div className="home-buttons">
+            <button onClick={() => router.push("/questionnaire")}>Get Started</button>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Home;
