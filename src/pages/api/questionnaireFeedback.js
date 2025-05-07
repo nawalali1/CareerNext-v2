@@ -1,5 +1,3 @@
-// src/pages/api/questionnaireFeedback.js
-
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
@@ -16,11 +14,15 @@ export default async function handler(req, res) {
   }
 
   const prompt = [
-    "You are a career advisor.",
-    "A user has just completed this questionnaire:",
-    ...answers.map((a,i) => `Q${i+1}: ${a}`),
+    "You are a friendly career advisor. You speak in clear, simple language.",
+    "A user has completed this questionnaire:",
+    ...answers.map((a, i) => `Q${i + 1}: ${a}`),
     "",
-    "Based on their answers, recommend the ONE career category they should pursue and explain why in 3–4 sentences."
+    "Based on their answers, return ONLY valid JSON with one key 'recommendations', whose value is an array of exactly 5 objects. Each object should have:",
+    "- 'title': the short career name (1–3 words).",
+    "- 'explanation': 1–2 short sentences explaining why this career fits the user's profile.",
+    "Make sure all 5 careers are within the same broad field and closely related.",
+    "Do not include any extra text or markdown—just the JSON."
   ].join("\n");
 
   try {
@@ -30,7 +32,7 @@ export default async function handler(req, res) {
     });
     return res.status(200).json({ text: response.text });
   } catch (e) {
-    console.error("Questionnaire feedback error:", e);
+    console.error("Gemini error:", e);
     return res.status(500).json({ error: "Internal error", detail: e.toString() });
   }
 }

@@ -1,30 +1,157 @@
-.results-container {
-  max-width: 600px;
-  margin: 4rem auto;
-  padding: 2rem;
-  font-family: 'Inter', sans-serif;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  text-align: center;
+/* src/styles/Results.css */
+
+/* -------------- THEME VARIABLES -------------- */
+:root {
+  --bg-page: #f0f4f8;
+  --card-bg: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.1);
+  --accent-start: #0077b6;
+  --accent-end: #00bcd4;
+  --text-heading: #102a43;
+  --text-body: #334e68;
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
-.results-container h2 {
-  color: #0077b6;
+/* -------------- PAGE WRAPPER -------------- */
+.results-container {
+  max-width: 960px;
+  margin: 6rem auto;
+  padding: 0 1rem;
+  font-family: var(--font-body);
+  box-sizing: border-box;
+}
+
+/* -------------- GRID OF CARDS -------------- */
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* -------------- INDIVIDUAL CARD -------------- */
+.recommendation-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.recommendation-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+/* -------------- CARD HEADER -------------- */
+.recommendation-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-start);
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+/* -------------- LEARN MORE BUTTON -------------- */
+.learn-more-btn {
+  align-self: flex-start;
+  margin-top: 1rem;
+  padding: 0.5rem 1.25rem;
+  background: var(--accent-start);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.learn-more-btn:hover {
+  background: var(--accent-end);
+  transform: translateY(-2px);
+}
+
+/* -------------- LOADING / ERROR TEXT -------------- */
+.loading-text {
+  font-size: 1rem;
+  color: var(--text-body);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* -------------- MODAL OVERLAY -------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* -------------- MODAL CONTENT -------------- */
+.modal-content {
+  background: var(--card-bg);
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+  outline: none;
+  position: relative;
+}
+
+/* -------------- MODAL TITLE & BODY -------------- */
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-heading);
+  margin-bottom: 1rem;
+}
+.modal-body {
+  font-size: 1rem;
+  color: var(--text-body);
+  line-height: 1.6;
   margin-bottom: 1.5rem;
 }
 
-.career-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* -------------- MODAL CLOSE BUTTON -------------- */
+.modal-close-btn {
+  display: block;
+  margin-left: auto;
+  padding: 0.5rem 1.25rem;
+  background: var(--accent-start);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.modal-close-btn:hover {
+  background: var(--accent-end);
+  transform: translateY(-2px);
 }
 
-.career-item {
-  padding: 1rem;
-  margin: 0.75rem 0;
-  border-radius: 10px;
-  background-color: #e0f2fe;
-  font-weight: 500;
-  color: #1e293b;
+/* -------------- CARD ENTRANCE ANIMATION -------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

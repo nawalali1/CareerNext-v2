@@ -1,27 +1,38 @@
 // src/firebase.js
 
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 
-// Your Firebase project configuration
+// Read values from .env.local
 const firebaseConfig = {
-  apiKey: "AIzaSyAQ4aeTcrT144jAoalXhOZxuUa_J3VkT4M",
-  authDomain: "careernext-f1dd7.firebaseapp.com",
-  projectId: "careernext-f1dd7",
-  storageBucket: "careernext-f1dd7.appspot.com",
-  messagingSenderId: "1024075600721",
-  appId: "1:1024075600721:web:64c95236fa347f2a3bb970",
-  measurementId: "G-NTHNKP7FSK",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase app
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase app (only once)
+const app = !getApps().length
+  ? initializeApp(firebaseConfig)
+  : getApp();
 
-// Initialize and export Firebase Auth
+// Export Auth & Firestore
 export const auth = getAuth(app);
+export const db   = getFirestore(app);
 
-// (Optional) If you need Firestore elsewhere, initialize and export it too
-export const db = getFirestore(app);
+// Initialize Analytics in browser
+if (typeof window !== "undefined") {
+  try {
+    getAnalytics(app);
+  } catch (e) {
+    // analytics can only be initialized once
+    console.warn("Analytics already initialized or not supported:", e);
+  }
+}
 
 export default app;

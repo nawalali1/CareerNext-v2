@@ -1,135 +1,152 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 
-const questions = [
+
+const QUESTIONS = [
   {
-    text: "What type of work feels the most fulfilling to you?",
+    prompt: "What matters most to you in a job?",
     options: [
-      "Solving complex problems or puzzles",
-      "Helping others improve or grow",
-      "Leading and making decisions",
-      "Creating or building things",
-      "Organizing systems or data",
-      "Exploring new ideas or technologies",
+      "Autonomy to make my own decisions",
+      "Impact and positive change for others",
+      "Financial stability and security",
+      "Creative freedom to innovate",
+      "Work–life balance and flexibility",
+      "Recognition and professional status",
     ],
   },
   {
-    text: "What kind of day-to-day work environment energizes you most?",
+    prompt: "Which activity consistently makes you lose track of time?",
     options: [
-      "Fast-paced and dynamic",
-      "Calm, steady, and predictable",
-      "Collaborative and social",
-      "Independent and quiet",
-      "Structured with clear expectations",
-      "Flexible and constantly changing",
+      "Solving complex puzzles or challenges",
+      "Teaching, mentoring, or coaching someone",
+      "Designing or crafting something new",
+      "Researching data to uncover insights",
+      "Writing or storytelling",
+      "Negotiating or persuading others",
     ],
   },
   {
-    text: "Which of these activities sounds most appealing long-term?",
+    prompt: "When you face a tough problem, what’s your go-to approach?",
     options: [
-      "Developing software or digital tools",
-      "Managing people and leading teams",
-      "Conducting research and writing reports",
-      "Planning logistics or organizing workflows",
-      "Teaching, coaching, or mentoring",
-      "Designing, building, or crafting creative solutions",
+      "Thoroughly researching and planning before acting",
+      "Diving in and learning by doing",
+      "Gathering others’ perspectives and collaborating",
+      "Brainstorming creative, out-of-the-box solutions",
+      "Analyzing data and evidence",
+      "Consulting experts and mentors",
     ],
   },
   {
-    text: "What motivates you most at work?",
+    prompt: "Which work environment energizes you most?",
     options: [
-      "Making a positive social impact",
-      "Earning a high income",
-      "Job stability and security",
-      "Autonomy and creative control",
-      "Recognition and upward mobility",
-      "Solving important, challenging problems",
+      "A fast-paced startup with shifting priorities",
+      "A structured corporate setting with clear processes",
+      "A creative studio or agency full of visual thinkers",
+      "An academic or research lab focused on deep inquiry",
+      "A remote, distributed team model",
+      "On-site field work or hands-on projects",
     ],
   },
   {
-    text: "How do you prefer to make decisions?",
+    prompt: "What drives you to keep going when the work gets tough?",
     options: [
-      "Based on data, logic, and facts",
-      "Based on gut feeling or instinct",
-      "By talking things through with others",
-      "Through trial-and-error",
-      "Slowly, with time and reflection",
-      "Quickly, based on past experience",
+      "The satisfaction of personal growth and mastery",
+      "Knowing I’m making a real difference for others",
+      "The thrill of creating something beautiful or original",
+      "The excitement of discovering new knowledge",
+      "Achieving goals and earning recognition",
+      "Solving urgent crises under pressure",
     ],
   },
   {
-    text: "Which industries or fields are you naturally curious about?",
+    prompt: "If you had unlimited resources, what project would you pour your energy into?",
     options: [
-      "Technology and software",
-      "Healthcare or mental health",
-      "Education or training",
-      "Business or finance",
-      "Creative industries (design, media, writing)",
-      "Government, policy, or law",
+      "Building cutting-edge technology that transforms lives",
+      "Developing a mentorship program to uplift others",
+      "Leading a bold design campaign that shifts perceptions",
+      "Conducting groundbreaking research in a field I love",
+      "Launching a global community initiative",
+      "Crafting transformative public policy projects",
     ],
   },
 ];
 
-function Questionnaire() {
-  const router = useRouter();
+export default function Questionnaire() {
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState(Array(questions.length).fill(""));
+  const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(""));
+  const router = useRouter();
 
-  const handleSelect = (option) => {
-    const updated = [...answers];
-    updated[current] = option;
-    setAnswers(updated);
+  const handleSelect = (opt) => {
+    const copy = [...answers];
+    copy[current] = opt;
+    setAnswers(copy);
   };
 
-  const next = () => {
-    if (current < questions.length - 1) {
+  const goNext = () => {
+    if (!answers[current]) return;
+    if (current < QUESTIONS.length - 1) {
       setCurrent(current + 1);
     } else {
-      // TODO: save answers if needed
+      localStorage.setItem("cn_answers", JSON.stringify(answers));
       router.push("/loading");
     }
   };
 
-  const back = () => {
+  const goBack = () => {
     if (current > 0) setCurrent(current - 1);
   };
 
+  const progress = ((current + 1) / QUESTIONS.length) * 100;
+
   return (
     <div className="questionnaire-container">
-      <h2>{questions[current].text}</h2>
-      <div className="progress">
-        Question {current + 1} of {questions.length}
+      <div className="question-header">
+        <span className="step-indicator">
+          Question {current + 1} of {QUESTIONS.length}
+        </span>
+        <div className="progress-bar">
+          <div
+            className="progress-fill"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
 
-      <div className="options">
-        {questions[current].options.map((opt, idx) => (
-          <label
-            key={idx}
-            className={`option ${
-              answers[current] === opt ? "selected" : ""
-            }`}
-          >
-            <input
-              type="radio"
-              name={`q${current}`}
-              checked={answers[current] === opt}
-              onChange={() => handleSelect(opt)}
-            />
-            {opt}
-          </label>
-        ))}
+      <div className="question-card">
+        <h2 className="question-prompt">{QUESTIONS[current].prompt}</h2>
+        <div className="options-list" role="radiogroup">
+          {QUESTIONS[current].options.map((opt) => (
+            <button
+              key={opt}
+              onClick={() => handleSelect(opt)}
+              className={
+                answers[current] === opt
+                  ? "option-btn selected"
+                  : "option-btn"
+              }
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="navigation-buttons">
-        <button onClick={back} disabled={current === 0}>
-          Back
+      <div className="nav-buttons">
+        <button
+          onClick={goBack}
+          disabled={current === 0}
+          className="nav-btn back"
+        >
+          ← Back
         </button>
-        <button onClick={next} disabled={!answers[current]}>
-          {current === questions.length - 1 ? "Submit" : "Next"}
+        <button
+          onClick={goNext}
+          disabled={!answers[current]}
+          className="nav-btn next"
+        >
+          {current < QUESTIONS.length - 1 ? "Next →" : "Submit"}
         </button>
       </div>
     </div>
   );
 }
-
-export default Questionnaire;

@@ -1,33 +1,39 @@
+/* Loading screen — centered spinner + subtle branding */
+
 .loading-screen {
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f1f5f9;
+  height: 100vh;
+  background-color: #f7fafc;
   font-family: 'Inter', sans-serif;
 }
 
 .loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
 .loader {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border: 6px solid #cbd5e1;
   border-top: 6px solid #0077b6;
   border-radius: 50%;
-  margin: 0 auto 1.5rem auto;
   animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+.loading-box h2 {
+  font-size: 1.3rem;
+  color: #1e293b;
+  font-weight: 500;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
-}
-
-h2 {
-  font-size: 1.2rem;
-  color: #1e293b;
 }

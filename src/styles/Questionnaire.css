@@ -1,80 +1,150 @@
-body, html {
-  background-color: #f8fafc;
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif;
+/* ---------------- THEME VARS ---------------- */
+:root {
+  --bg-page: #f4f6f9;
+  --bg-card: #ffffff;
+  --accent-start: #0077b6;
+  --accent-end: #00bcd4;
+  --text-dark: #1f2937;
+  --text-muted: #4b5563;
+  --border-radius: 16px;
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
-.questionnaire-card {
-  max-width: 700px;
-  margin: 5% auto;
-  padding: 3rem 2rem;
-  background: white;
-  border-radius: 16px;
-  color: #1f2937;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  text-align: center;
+/* ---------------- PAGE SETUP ---------------- */
+body {
+  background: var(--bg-page);
+}
+.questionnaire-container {
+  max-width: 840px;
+  margin: 6rem auto;
+  padding: 0 1rem;
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.question {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  line-height: 1.4;
-  font-weight: 600;
-  color: #0f172a;
-}
-
-.options {
-  display: grid;
+/* ------------ HEADER & PROGRESS ------------ */
+.question-header {
+  display: flex;
+  align-items: center;
   gap: 1rem;
+}
+.step-indicator {
+  font-size: 1rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+  transition: width 0.3s ease;
+}
+
+/* ------------ QUESTION CARD ------------ */
+.question-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2rem;
+  animation: fadeInUp 0.6s ease-out both;
+}
+.question-prompt {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: center;
   margin-bottom: 2rem;
 }
 
-.option-button {
-  padding: 1rem;
-  border-radius: 12px;
-  background-color: #e2e8f0;
-  border: 2px solid transparent;
-  color: #1e293b;
+/* ------------ OPTIONS LIST (VERTICAL) ------------ */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.option-btn {
+  padding: 1rem 1.5rem;
+  background: #f3f4f6;
+  color: var(--text-dark);
+  border: 3px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  text-align: left;
+  transition: background 0.2s, transform 0.2s, border-color 0.2s;
   cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+}
+.option-btn:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+}
+.option-btn.selected {
+  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+  color: #fff;
+  border-color: var(--accent-end);
+  box-shadow: 0 6px 16px rgba(0, 119, 182, 0.2);
 }
 
-.option-button:hover {
-  background-color: #cbd5e1;
-}
-
-.option-button.selected {
-  background-color: #0077b6;
-  color: white;
-  border-color: #0077b6;
-}
-
-.navigation {
+/* ------------ NAV BUTTONS ------------ */
+.nav-buttons {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
 }
-
-.navigation button {
+.nav-btn {
   flex: 1;
   padding: 1rem;
-  border-radius: 12px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   border: none;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  background-color: #0077b6;
-  color: white;
-  transition: background-color 0.3s ease;
+  transition: background 0.2s, transform 0.2s;
 }
-
-.navigation button:disabled {
-  background-color: #94a3b8;
+.nav-btn.back {
+  background: #e5e7eb;
+  color: var(--text-muted);
+}
+.nav-btn.back:hover:not(:disabled) {
+  background: #d1d5db;
+  transform: translateY(-2px);
+}
+.nav-btn.back:disabled {
+  background: #f3f4f6;
+  color: #cbd5e1;
+  cursor: not-allowed;
+}
+.nav-btn.next {
+  background: var(--accent-start);
+  color: #fff;
+}
+.nav-btn.next:hover:not(:disabled) {
+  background: var(--accent-end);
+  transform: translateY(-2px);
+}
+.nav-btn.next:disabled {
+  background: #94a3b8;
   cursor: not-allowed;
 }
 
-.navigation button:hover:not(:disabled) {
-  background-color: #023e8a;
+/* ------------ ANIMATION ------------ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

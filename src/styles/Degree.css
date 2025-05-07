@@ -1,0 +1,49 @@
+.degree-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 70px);
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+    background: #f7f9fc;
+  }
+  
+  .degree-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .degree-form h2 {
+    margin-bottom: 1rem;
+    color: #0077b6;
+  }
+  
+  .degree-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .degree-form button {
+    padding: 0.75rem 1.5rem;
+    background: #00bcd4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .degree-form button:hover {
+    background: #0077b6;
+  }
+  

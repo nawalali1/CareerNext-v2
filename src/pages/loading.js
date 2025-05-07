@@ -1,8 +1,7 @@
-// src/pages/loadingscreen.js
-import Head from 'next/head'
-import LoadingScreen from '../components/LoadingScreen'
+import Head from "next/head";
+import LoadingScreen from "../components/LoadingScreen";
 
-export default function LoadingScreenPage() {
+export default function LoadingPage() {
   return (
     <>
       <Head>
@@ -10,5 +9,5 @@ export default function LoadingScreenPage() {
       </Head>
       <LoadingScreen />
     </>
-  )
+  );
 }
