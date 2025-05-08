@@ -18,6 +18,9 @@ import '../styles/Degree.css';
 import '../styles/Jobs.css';
 import '../styles/Sidebar.css';
 
+
+import 'react-quill/dist/quill.snow.css';
+
 import Navbar from '../components/Navbar';
 import ChatPanel from '../components/ChatPanel';
 import PrivateRoute from '../components/PrivateRoute';

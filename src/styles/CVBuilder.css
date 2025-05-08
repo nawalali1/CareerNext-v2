@@ -1,18 +1,26 @@
 /* src/styles/CVBuilder.css */
 
+/* ---------- Root Variables ---------- */
 :root {
-  --color-text:       #212529;
-  --color-secondary:  #6c757d;
-  --color-accent:     #007bff;
-  --color-bg-light:   #f8f9fa;
-  --color-border:     #dee2e6;
+  --color-text:         #212529;
+  --color-secondary:    #6c757d;
+  --color-accent:       #007bff;
+  --color-accent-light: rgba(0, 123, 255, 0.1);
+  --color-bg-light:     #f8f9fa;
+  --color-bg-section:   #ffffff;
+  --color-border:       #dee2e6;
+  --radius-default:     8px;
+  --shadow-light:       0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-medium:      0 4px 12px rgba(0, 0, 0, 0.1);
+  --font-sans:          'Inter', sans-serif;
+  --font-serif:         'Georgia', serif;
 }
 
+/* ========== Container & Layout ========== */
 .cv-builder-container {
   display: flex;
   flex-direction: column;
-  /* Adjust 60px to match your navbar height */
-  height: calc(100vh - 60px);
+  height: calc(100vh - 60px); /* navbar height */
   background: var(--color-bg-light);
 }
 
@@ -22,44 +30,177 @@
   overflow: hidden;
 }
 
-.preview-panel {
-  flex: 1;
+/* ========== Sidebar Wizard ========== */
+.sidebar {
+  width: 260px;
+  background: var(--color-bg-section);
+  margin: 1.5rem;
   padding: 1.5rem;
-  overflow-y: auto;
-  background: #fff;
+  border-radius: var(--radius-default);
+  box-shadow: var(--shadow-medium);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* Preview content */
-.cv-preview {
-  max-width: 800px;
-  margin: 0 auto;
+.step-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-default);
+  background: var(--color-bg-light);
+  border: 2px solid transparent;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
 }
-.cv-preview section {
-  margin-bottom: 1.5rem;
+.step-box:hover,
+.step-box.active {
+  background: var(--color-accent-light);
+  border-color: var(--color-accent);
 }
-.cv-preview h1,
-.cv-preview h2,
-.cv-preview h3 {
-  margin: 0 0 0.5rem;
+.step-box .circle {
+  background: var(--color-accent);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.step-box h3 {
+  margin: 0;
+  font-size: 1rem;
   color: var(--color-text);
 }
+
+/* Navigation buttons */
+.nav-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+.nav-buttons button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--radius-default);
+  font-weight: 500;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.1s;
+}
+.nav-buttons button:first-child {
+  background: var(--color-bg-light);
+  color: var(--color-text);
+  box-shadow: var(--shadow-light);
+}
+.nav-buttons button:last-child {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: var(--shadow-light);
+}
+.nav-buttons button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+.nav-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ========== Preview Panel ========== */
+.preview-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  background: var(--color-bg-light);
+
+  /* shift paper to the left */
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* ========== A4 Paper-Style CV Preview ========== */
+.cv-preview {
+  background: var(--color-bg-section);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 4px;
+  font-family: var(--font-serif);
+  color: var(--color-text);
+
+  /* true A4 at 96dpi */
+  width: min(90vw, 794px);
+  height: calc((794px) * (297 / 210)); /* ≈1123px */
+
+  /* page margins inside the sheet */
+  padding: 2rem 3rem;
+
+  /* remove auto horizontal centering */
+  margin: 2rem 0 2rem 0;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* scroll content if taller than sheet */
+.cv-preview > .content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Section wrapper */
+.cv-preview section {
+  margin-bottom: 2rem;
+  page-break-inside: avoid;
+}
+
+/* Section headings */
+.cv-preview h1,
+.cv-preview h2 {
+  margin: 0 0 0.5rem;
+  font-weight: bold;
+}
 .cv-preview h1 {
-  font-size: 1.8rem;
+  font-size: 2rem;
 }
 .cv-preview h2 {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid rgba(0,0,0,0.1);
+  padding-bottom: 0.25rem;
 }
+
+/* Paragraph text */
 .cv-preview p {
   margin: 0 0 1rem;
   color: var(--color-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
+/* ========== Responsive ========= */
 @media (max-width: 768px) {
   .cv-builder-container {
     flex-direction: column;
   }
+  .sidebar {
+    width: auto;
+    margin: 1rem;
+  }
   .preview-panel {
     padding: 1rem;
+  }
+  .cv-preview {
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    padding: 1.5rem 2rem;
+    margin: 1rem 0;
   }
 }

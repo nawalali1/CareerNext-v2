@@ -1,12 +1,14 @@
+// src/components/Results.js
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-
+import { useRouter } from "next/router";
 
 Modal.setAppElement("#__next");
 
 export default function Results() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [recs, setRecs] = useState([]);
+  const [recs, setRecs]       = useState([]);
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
@@ -45,12 +47,24 @@ export default function Results() {
         {recs.map((r, i) => (
           <div key={i} className="recommendation-item">
             <h3 className="recommendation-title">{r.title}</h3>
-            <button
-              className="learn-more-btn"
-              onClick={() => setSelected(r)}
-            >
-              Learn More
-            </button>
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+              <button
+                className="learn-more-btn"
+                onClick={() => setSelected(r)}
+              >
+                Learn More
+              </button>
+              <button
+                className="learn-more-btn"
+                onClick={() =>
+                  router.push(
+                    `/jobs?category=${encodeURIComponent(r.title)}`
+                  )
+                }
+              >
+                View Jobs
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -67,7 +81,10 @@ export default function Results() {
             <div className="modal-body">
               <p>{selected.explanation}</p>
             </div>
-            <button className="modal-close-btn" onClick={() => setSelected(null)}>
+            <button
+              className="modal-close-btn"
+              onClick={() => setSelected(null)}
+            >
               Close
             </button>
           </>

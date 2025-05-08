@@ -1,19 +1,26 @@
-// src/pages/cv-builder.js
-import Head from 'next/head'
-import dynamic from 'next/dynamic'
+// src/pages/cvbuilder.js
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
 
-// CVBuilder uses html2canvas/jsPDF and client-only hooks, so we
-// disable SSR to avoid “window is not defined” errors.
-const CVBuilder = dynamic(() => import('../components/CVBuilder'), { ssr: false })
+// Dynamically import your CVBuilder component from src/components
+const CVBuilder = dynamic(() => import('../components/CVBuilder'), {
+  ssr: false, // disable server‐side rendering if CVBuilder uses browser APIs
+});
 
-export default function CvBuilderPage() {
+export default function CVBuilderPage() {
   return (
     <>
       <Head>
-        <title>CV Builder</title>
-        <meta name="description" content="Create your CV" />
+        <title>CV Builder • CareerNext</title>
+        <meta
+          name="description"
+          content="Build your professional CV step by step with CareerNext."
+        />
       </Head>
-      <CVBuilder />
+
+      <main style={{ padding: '2rem', marginTop: '4rem' }}>
+        <CVBuilder />
+      </main>
     </>
-  )
+  );
 }
