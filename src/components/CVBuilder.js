@@ -3,38 +3,36 @@
 
 import React, { useReducer, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import jsPDF        from 'jspdf';
 
-import Toolbar from './Toolbar';
+import Toolbar     from './Toolbar';
 import SectionEditor from './SectionEditor';
-import Preview from './Preview';
+import Preview       from './Preview';
 import StepIndicator from './StepIndicator';
+import Sidebar       from './Sidebar';    // ← NEW!
 
-// Your section templates
+// Extend your templates to cover all the IDs Sidebar will use
 const TEMPLATES = {
-  personal: { id: 'personal', title: 'Contact Details' },
-  summary:  { id: 'summary',  title: 'Professional Summary', content: '<p>Your summary...</p>' },
-  // add more (experience, education, skills) here if you like
+  personal:   { id: 'personal',   title: 'Contact Details',    fields: [
+                  { key: 'name', label: 'Name', value: '' },
+                  { key: 'email',label: 'Email',value: '' },
+                  { key: 'phone',label: 'Phone',value: '' },
+              ] },
+  summary:    { id: 'summary',    title: 'Professional Summary', content: '<p>Your summary…</p>' },
+  education:  { id: 'education',  title: 'Education',            content: '<p>Your education details…</p>' },
+  experience: { id: 'experience', title: 'Experience',           content: '<p>Your experience details…</p>' },
+  skills:     { id: 'skills',     title: 'Skills',               content: '<p>Your skills…</p>' },
 };
 
-// Define the _shape_ of your state and a name for the initial value
+// initial state now driven by TEMPLATES
 const initialState = {
   sections: [
-    {
-      key: 'personal-0',
-      ...TEMPLATES.personal,
-      fields: [
-        { key: 'name',  label: 'Name',  value: '' },
-        { key: 'email', label: 'Email', value: '' },
-        { key: 'phone', label: 'Phone', value: '' },
-      ],
-    },
-    { key: 'summary-0', ...TEMPLATES.summary },
+    { key: 'personal-0',   ...TEMPLATES.personal },
+    { key: 'summary-0',    ...TEMPLATES.summary },
   ],
   activeKey: 'personal-0',
 };
 
-// A reducer that always returns a valid state (never `undefined`)
 function reducer(state = initialState, action) {
   switch (action.type) {
     case 'REORDER': {
@@ -45,17 +43,23 @@ function reducer(state = initialState, action) {
     }
     case 'SELECT':
       return { ...state, activeKey: action.payload };
+
     case 'ADD_SECTION': {
-      const key = `custom-${Date.now()}`;
+      // payload is the template ID (e.g. 'education', 'experience', etc.)
+      const tplId = action.payload;
+      const tpl   = TEMPLATES[tplId] || { id: 'custom', title: 'New Section', content: '<p>New…</p>' };
+      const key   = `${tplId}-${Date.now()}`;
+      // Personal template has fields, other templates use content
+      const section = tpl.fields
+        ? { key, ...tpl }
+        : { key, id: tpl.id, title: tpl.title, content: tpl.content };
       return {
         ...state,
-        sections: [
-          ...state.sections,
-          { key, id: 'custom', title: 'New Section', content: '<p>Content…</p>' }
-        ],
+        sections: [...state.sections, section],
         activeKey: key,
       };
     }
+
     case 'REMOVE_SECTION': {
       const filtered = state.sections.filter(s => s.key !== action.payload);
       const newActive =
@@ -64,6 +68,7 @@ function reducer(state = initialState, action) {
           : state.activeKey;
       return { ...state, sections: filtered, activeKey: newActive };
     }
+
     case 'TITLE_CHANGE':
       return {
         ...state,
@@ -73,6 +78,7 @@ function reducer(state = initialState, action) {
             : s
         ),
       };
+
     case 'CONTENT_CHANGE':
       return {
         ...state,
@@ -82,6 +88,7 @@ function reducer(state = initialState, action) {
             : s
         ),
       };
+
     case 'FIELD_CHANGE':
       return {
         ...state,
@@ -97,6 +104,7 @@ function reducer(state = initialState, action) {
           };
         }),
       };
+
     case 'ADD_FIELD':
       return {
         ...state,
@@ -112,23 +120,21 @@ function reducer(state = initialState, action) {
             : s
         ),
       };
+
     default:
-      // VERY IMPORTANT: always return state if action unhandled
       return state;
   }
 }
 
 export default function CVBuilder() {
-  // Initialize reducer with our initialState
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [step, setStep]  = useState(0);
-  const previewRef       = useRef();
+  const [step, setStep]   = useState(0);
+  const previewRef        = useRef();
 
-  // Now state.sections can never be undefined
   const steps = state.sections;
   const currentSection = steps[step];
 
-  // PDF download logic unchanged
+  // PDF download
   const downloadPDF = async () => {
     const canvas = await html2canvas(previewRef.current, { scale: 2 });
     const img    = canvas.toDataURL('image/png');
@@ -143,43 +149,32 @@ export default function CVBuilder() {
     <div className="cv-builder-container">
       <Toolbar />
 
-      {/* Stepper */}
       <div className="builder-header">
         <StepIndicator steps={steps} current={step} />
       </div>
 
       <div className="builder-body">
-        {/* Left: form panel */}
-        <aside className="form-panel">
-          <SectionEditor
-            section={currentSection}
-            onContentChange={(key, content) =>
-              dispatch({ type: 'CONTENT_CHANGE', payload: { key, content } })
-            }
-            onFieldChange={(secKey, fieldKey, value) =>
-              dispatch({ type: 'FIELD_CHANGE', payload: { secKey, fieldKey, value } })
-            }
-            onAddField={(secKey) =>
-              dispatch({ type: 'ADD_FIELD', payload: secKey })
-            }
-          />
+        {/* ← REPLACE your old form-panel with Sidebar */}
+        <Sidebar
+          sections={state.sections}
+          activeKey={state.activeKey}
+          onSelect={(key) => {
+            const idx = state.sections.findIndex(s => s.key === key);
+            if (idx >= 0) setStep(idx);
+            dispatch({ type: 'SELECT', payload: key });
+          }}
+          onReorder={({ sourceIndex, destIndex }) =>
+            dispatch({ type: 'REORDER', payload: { sourceIndex, destIndex } })
+          }
+          onAddSection={(tplId) => dispatch({ type: 'ADD_SECTION', payload: tplId })}
+          onRemoveSection={(key) => dispatch({ type: 'REMOVE_SECTION', payload: key })}
+          onTitleChange={(key, title) =>
+            dispatch({ type: 'TITLE_CHANGE', payload: { key, title } })
+          }
+          onDownload={downloadPDF}
+          theme="light"  // or "dark"
+        />
 
-          <div className="form-nav">
-            <button
-              disabled={step === 0}
-              onClick={() => setStep(s => Math.max(0, s - 1))}
-            >
-              Back
-            </button>
-            {step < steps.length - 1 ? (
-              <button onClick={() => setStep(s => s + 1)}>Next</button>
-            ) : (
-              <button onClick={downloadPDF}>Download CV</button>
-            )}
-          </div>
-        </aside>
-
-        {/* Right: live preview */}
         <div className="preview-panel" ref={previewRef}>
           <Preview
             sections={state.sections}
@@ -187,11 +182,11 @@ export default function CVBuilder() {
             renderActive={() => (
               <SectionEditor
                 section={currentSection}
-                onContentChange={(key, content) =>
-                  dispatch({ type: 'CONTENT_CHANGE', payload: { key, content } })
+                onContentChange={(k, c) =>
+                  dispatch({ type: 'CONTENT_CHANGE', payload: { key: k, content: c } })
                 }
-                onFieldChange={(secKey, fieldKey, value) =>
-                  dispatch({ type: 'FIELD_CHANGE', payload: { secKey, fieldKey, value } })
+                onFieldChange={(secKey, fieldKey, v) =>
+                  dispatch({ type: 'FIELD_CHANGE', payload: { secKey, fieldKey, value: v } })
                 }
                 onAddField={(secKey) =>
                   dispatch({ type: 'ADD_FIELD', payload: secKey })

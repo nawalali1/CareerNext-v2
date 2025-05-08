@@ -1,0 +1,235 @@
+:root {
+    --sidebar-bg:      #fff;
+    --sidebar-border:  #e5e7eb;
+    --text-primary:    #374151;
+    --text-secondary:  #64748b;
+    --accent:          #00bcd4;
+    --danger:          #e11d48;
+    --hover-bg:        #f2f4f7;
+    --active-bg:       #e0f7fa;
+    --tooltip-bg:      rgba(0,0,0,0.75);
+    --tooltip-fg:      #fff;
+    --dark-sidebar-bg: #1f2937;
+    --dark-text:       #e5e7eb;
+  }
+  [data-theme="dark"] .cv-sidebar {
+    background: var(--dark-sidebar-bg);
+    color: var(--dark-text);
+    border-color: var(--sidebar-border);
+  }
+  .cv-sidebar {
+    width: 280px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* ─── COLLAPSED ───────────────────────────────────────────────────────── */
+  .cv-sidebar.collapsed {
+    width: 60px;
+    padding: 1rem 0.5rem;
+  }
+  .cv-sidebar.collapsed .sidebar-header ~ *,
+  .cv-sidebar.collapsed .template-menu,
+  .cv-sidebar.collapsed .search-box,
+  .cv-sidebar.collapsed .sidebar-list,
+  .cv-sidebar.collapsed .sidebar-footer {
+    display: none;
+  }
+  
+  /* ─── HEADER & BREADCRUMB ─────────────────────────────────────────────── */
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .sidebar-breadcrumb {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar-header-controls {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .sidebar-header-controls button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    position: relative;
+  }
+  .sidebar-header-controls button:hover {
+    color: var(--accent);
+  }
+  
+  /* ─── TOOLTIP ─────────────────────────────────────────────────────────── */
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.25rem 0.5rem;
+    background: var(--tooltip-bg);
+    color: var(--tooltip-fg);
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  [data-tooltip]:hover::after {
+    opacity: 1;
+  }
+  
+  /* ─── TEMPLATE MENU ───────────────────────────────────────────────────── */
+  .template-menu {
+    list-style: none;
+    margin: 0.5rem 0;
+    padding: 0;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .template-menu li button {
+    width: 100%;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+  }
+  .template-menu li button:hover {
+    background: var(--hover-bg);
+  }
+  
+  /* ─── SEARCH BOX ───────────────────────────────────────────────────────── */
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--sidebar-border);
+    border-radius: 4px;
+  }
+  .search-box input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 0.9rem;
+  }
+  
+  /* ─── GROUPS & LIST ───────────────────────────────────────────────────── */
+  .sidebar-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .sidebar-group {
+    margin-bottom: 0.75rem;
+  }
+  .group-title {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+  }
+  
+  /* ─── ITEMS & DRAG HANDLE ─────────────────────────────────────────────── */
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    height: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .sidebar-item:hover {
+    background: var(--hover-bg);
+  }
+  .sidebar-item.active {
+    background: var(--active-bg);
+  }
+  .move-handle {
+    width: 24px;
+    text-align: center;
+    color: var(--text-secondary);
+    visibility: hidden;
+  }
+  .sidebar-item:hover .move-handle {
+    visibility: visible;
+  }
+  
+  /* ─── TITLE INPUT & REMOVE ────────────────────────────────────────────── */
+  .section-title-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0 0.5rem;
+    font-size: 0.9rem;
+    background: transparent;
+  }
+  .remove-btn {
+    background: none;
+    border: none;
+    color: var(--danger);
+    padding: 0.25rem;
+    position: relative;
+  }
+  
+  /* ─── CONTEXT MENU ────────────────────────────────────────────────────── */
+  .context-menu {
+    position: fixed;
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    z-index: 200;
+  }
+  .context-menu li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .context-menu li:hover {
+    background: var(--hover-bg);
+  }
+  
+  /* ─── FOOTER (BULK & DOWNLOAD) ────────────────────────────────────────── */
+  .sidebar-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  .bulk-btn,
+  .download-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--text-secondary);
+    position: relative;
+  }
+  .bulk-btn:hover,
+  .download-btn:hover {
+    color: var(--accent);
+  }
+  

@@ -1,4 +1,3 @@
-// src/components/Toolbar.js
 import React from 'react';
 
 export default function Toolbar() {

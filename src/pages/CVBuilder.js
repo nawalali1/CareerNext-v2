@@ -1,4 +1,3 @@
-// src/pages/cvbuilder.js
 import Head from 'next/head';
 import CVBuilder from '../components/CVBuilder';
 

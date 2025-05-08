@@ -1,9 +1,12 @@
-// src/components/Preview.js
 import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function Preview({ sections, activeKey, renderActive }) {
-  const personal = sections.find((s) => s.id === 'personal');
+  // Guard against undefined
+  const safeSections = Array.isArray(sections) ? sections : [];
+
+  const personal = safeSections.find((s) => s.id === 'personal');
+
   return (
     <div className="cv-preview">
       {personal && (
@@ -18,25 +21,27 @@ export default function Preview({ sections, activeKey, renderActive }) {
         </div>
       )}
 
-      {sections.filter((s) => s.id !== 'personal').map((s) => (
-        <section key={s.key} className="cv-section">
-          <h3 className="cv-section-heading">{s.title}</h3>
-          {s.key === activeKey ? (
-            renderActive()
-          ) : (
-            <div
-              className="rich-display"
-              dangerouslySetInnerHTML={{ __html: s.content }}
-            />
-          )}
-        </section>
-      ))}
+      {safeSections
+        .filter((s) => s.id !== 'personal')
+        .map((s) => (
+          <section key={s.key} className="cv-section">
+            <h3 className="cv-section-heading">{s.title}</h3>
+            {s.key === activeKey ? (
+              renderActive()
+            ) : (
+              <div
+                className="rich-display"
+                dangerouslySetInnerHTML={{ __html: s.content }}
+              />
+            )}
+          </section>
+        ))}
     </div>
   );
 }
 
 Preview.propTypes = {
-  sections: PropTypes.array.isRequired,
-  activeKey: PropTypes.string.isRequired,
+  sections:     PropTypes.array,
+  activeKey:    PropTypes.string.isRequired,
   renderActive: PropTypes.func.isRequired,
 };

@@ -1,4 +1,3 @@
-// src/components/StepProgress.js
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -8,7 +7,9 @@ export default function StepProgress({ steps, current, onSelect }) {
       {steps.map((label, i) => (
         <div
           key={i}
-          className={`step-item ${i === current ? 'active' : i < current ? 'completed' : ''}`}
+          className={`step-item ${
+            i === current ? 'active' : i < current ? 'completed' : ''
+          }`}
           onClick={() => onSelect(i)}
         >
           <div className="step-bullet">{i + 1}</div>
@@ -21,7 +22,7 @@ export default function StepProgress({ steps, current, onSelect }) {
 }
 
 StepProgress.propTypes = {
-  steps: PropTypes.arrayOf(PropTypes.string).isRequired,
-  current: PropTypes.number.isRequired,
+  steps:    PropTypes.arrayOf(PropTypes.string).isRequired,
+  current:  PropTypes.number.isRequired,
   onSelect: PropTypes.func.isRequired,
 };

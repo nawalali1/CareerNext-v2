@@ -1,3 +1,4 @@
+// pages/_app.js
 import Head from 'next/head';
 import '../styles/globals.css';
 import '../styles/App.css';
@@ -14,7 +15,10 @@ import '../styles/ForgotPassword.css';
 import '../styles/Settings.css';
 import '../styles/Degree.css';
 import '../styles/Jobs.css';
-
+import '../styles/Sidebar.css';
+import '../styles/SectionEditor.css';
+import '../styles/StepIndicator.css';
+import '../styles/StepProgress.css';
 
 import Navbar from '../components/Navbar';
 import ChatPanel from '../components/ChatPanel';
