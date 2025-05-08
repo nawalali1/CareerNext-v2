@@ -12,14 +12,82 @@ html, body {
 
 body {
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f7f9fc;
-  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-size: 16px;
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- GLOBAL LAYOUT ---------- */
+/* ---------- DESIGN SYSTEM VARIABLES ---------- */
+:root {
+  /* Colors */
+  --color-primary:   #2563eb;    /* vibrant blue */
+  --color-accent:    #1f2937;    /* dark slate */
+  --color-bg:        #f7f9fc;    /* light gray background (matched original) */
+  --color-surface:   #ffffff;    /* card / panel background */
+  --color-text:      #111827;    /* near-black text */
+  --color-muted:     #6b7280;    /* medium gray text */
+  --color-border:    #e5e7eb;    /* light border */
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Elevation / Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+}
+
+/* Dark mode override (if you toggle data-theme="dark" on <html>) */
+[data-theme="dark"] {
+  --color-bg:      #1f2937;
+  --color-surface: #111827;
+  --color-text:    #f3f4f6;
+  --color-muted:   #9ca3af;
+  --color-border:  #374151;
+}
+
+/* ---------- TYPOGRAPHY SCALES ---------- */
+h1 { font-size: 2rem; letter-spacing: 0.5px; margin-bottom: var(--space-sm); }
+h2 { font-size: 1.5rem; letter-spacing: 0.4px; margin-bottom: var(--space-sm); }
+h3 { font-size: 1.25rem; letter-spacing: 0.3px; margin-bottom: var(--space-xs); }
+p, ul, ol, li, input, button {
+  font-size: 1rem;
+}
+
+/* ---------- INTERACTIVITY & ACCESSIBILITY ---------- */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- GLOBAL LAYOUT UTILITIES ---------- */
 .main-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -38,7 +106,7 @@ body {
   }
 }
 
-/* ---------- RESPONISVE UTILS ---------- */
+/* ---------- RESPONSIVE UTILITIES ---------- */
 @media (max-width: 768px) {
   .mobile-stack {
     display: flex;
