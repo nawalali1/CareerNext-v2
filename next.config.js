@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable ESLint during builds to avoid build failures
+  reactStrictMode: true,
+  // allow linting warnings during build instead of failing
   eslint: {
     ignoreDuringBuilds: true,
   },
