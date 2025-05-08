@@ -1,0 +1,100 @@
+.
+├── README.md
+├── eslint.config.mjs
+├── jsconfig.json
+├── next.config.js
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── project-structure.txt
+├── public
+│   ├── favicon.ico
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── login-illustration.jpeg
+│   ├── next.svg
+│   ├── office-bg.jpg
+│   ├── vercel.svg
+│   └── window.svg
+├── service-account.json
+└── src
+    ├── App.css
+    ├── App.test.js
+    ├── Responsive.css
+    ├── components
+    │   ├── App.test.js
+    │   ├── CVBuilder.js
+    │   ├── ChatPanel.js
+    │   ├── Degree.js
+    │   ├── ErrorBoundary.js
+    │   ├── ForgotPassword.js
+    │   ├── Home.js
+    │   ├── Jobs.js
+    │   ├── LoadingScreen.js
+    │   ├── Login.js
+    │   ├── Navbar.css
+    │   ├── Navbar.js
+    │   ├── Preview.js
+    │   ├── PrivateRoute.js
+    │   ├── Questionnaire.js
+    │   ├── Results.js
+    │   ├── SectionEditor.js
+    │   ├── Settings.js
+    │   ├── Sidebar.js
+    │   ├── Signup.js
+    │   ├── StepIndicator.js
+    │   ├── StepProgress.js
+    │   ├── Toolbar.js
+    │   ├── index.js
+    │   ├── reportWebVitals.js
+    │   └── setupTests.js
+    ├── firebase.js
+    ├── index.css
+    ├── index.js
+    ├── logo.svg
+    ├── pages
+    │   ├── _app.js
+    │   ├── _document.js
+    │   ├── api
+    │   ├── cv.js
+    │   ├── cvbuilder.js
+    │   ├── degree.js
+    │   ├── degreetocareer.js
+    │   ├── forgot-password.js
+    │   ├── home.js
+    │   ├── index.js
+    │   ├── jobs.js
+    │   ├── loading.js
+    │   ├── login.js
+    │   ├── questionnaire.js
+    │   ├── results.js
+    │   ├── sectioneditor.js
+    │   ├── settings.js
+    │   ├── sidebar.js
+    │   └── signup.js
+    ├── reportWebVitals.js
+    ├── setupTests.js
+    └── styles
+        ├── App.css
+        ├── CVBuilder.css
+        ├── ChatPanel.css
+        ├── Degree.css
+        ├── DegreeToCareer.css
+        ├── ForgotPassword.css
+        ├── Home.css
+        ├── Home.module.css
+        ├── Jobs.css
+        ├── LoadingScreen.css
+        ├── Login.css
+        ├── Navbar.css
+        ├── Questionnaire.css
+        ├── Responsive.css
+        ├── Results.css
+        ├── Settings.css
+        ├── Sidebar.css
+        ├── Signup.css
+        ├── Students.css
+        ├── globals.css
+        └── index.css
+
+7 directories, 91 files
