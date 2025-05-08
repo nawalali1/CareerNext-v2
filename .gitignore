@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 node_modules/
 .env.local
+
+# Keep your key safe
+/service-account.json
+service-account.json

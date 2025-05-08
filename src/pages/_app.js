@@ -1,5 +1,6 @@
 // pages/_app.js
 import Head from 'next/head';
+
 import '../styles/globals.css';
 import '../styles/App.css';
 import '../styles/Home.css';
@@ -16,18 +17,18 @@ import '../styles/Settings.css';
 import '../styles/Degree.css';
 import '../styles/Jobs.css';
 import '../styles/Sidebar.css';
-import '../styles/SectionEditor.css';
-import '../styles/StepIndicator.css';
-import '../styles/StepProgress.css';
 
 import Navbar from '../components/Navbar';
 import ChatPanel from '../components/ChatPanel';
 import PrivateRoute from '../components/PrivateRoute';
 
 const protectedRoutes = ['/cvbuilder', '/results'];
+const chatRoutes      = ['/cvbuilder'];
 
 export default function App({ Component, pageProps, router }) {
-  const isProtected = protectedRoutes.includes(router.pathname.toLowerCase());
+  const path           = router.pathname.toLowerCase();
+  const isProtected    = protectedRoutes.includes(path);
+  const showChatPanel  = chatRoutes.includes(path);
 
   return (
     <>
@@ -42,7 +43,7 @@ export default function App({ Component, pageProps, router }) {
       </Head>
 
       <Navbar />
-      <ChatPanel />
+      {showChatPanel && <ChatPanel />}
 
       {isProtected ? (
         <PrivateRoute>

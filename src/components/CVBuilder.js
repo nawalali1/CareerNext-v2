@@ -1,141 +1,68 @@
 // src/components/CVBuilder.js
 "use client";
 
-import React, { useReducer, useRef, useState } from 'react';
+import React, { useReducer, useRef, useState, useEffect } from 'react';
 import html2canvas from 'html2canvas';
-import jsPDF        from 'jspdf';
+import jsPDF       from 'jspdf';
 
-import Toolbar     from './Toolbar';
+import Toolbar       from './Toolbar';
+import Sidebar       from './Sidebar';
 import SectionEditor from './SectionEditor';
 import Preview       from './Preview';
-import StepIndicator from './StepIndicator';
-import Sidebar       from './Sidebar';    // ← NEW!
 
-// Extend your templates to cover all the IDs Sidebar will use
-const TEMPLATES = {
-  personal:   { id: 'personal',   title: 'Contact Details',    fields: [
-                  { key: 'name', label: 'Name', value: '' },
-                  { key: 'email',label: 'Email',value: '' },
-                  { key: 'phone',label: 'Phone',value: '' },
-              ] },
-  summary:    { id: 'summary',    title: 'Professional Summary', content: '<p>Your summary…</p>' },
-  education:  { id: 'education',  title: 'Education',            content: '<p>Your education details…</p>' },
-  experience: { id: 'experience', title: 'Experience',           content: '<p>Your experience details…</p>' },
-  skills:     { id: 'skills',     title: 'Skills',               content: '<p>Your skills…</p>' },
-};
+const WIZARD_STEPS = [
+  { key: 'contact', title: 'Contact Details' },
+  { key: 'summary', title: 'Professional Summary' },
+  { key: 'quals',   title: 'Qualifications' },
+];
 
-// initial state now driven by TEMPLATES
 const initialState = {
-  sections: [
-    { key: 'personal-0',   ...TEMPLATES.personal },
-    { key: 'summary-0',    ...TEMPLATES.summary },
+  // contact fields
+  contact: { name: '', email: '', phone: '', address: '' },
+  // single summary field
+  summary: '',
+  // quals: can add/remove custom sections on top of these three
+  quals: [
+    { id: 1, title: 'Education',  content: '' },
+    { id: 2, title: 'Experience', content: '' },
+    { id: 3, title: 'Skills',     content: '' },
   ],
-  activeKey: 'personal-0',
+  nextQualId: 4,
 };
 
-function reducer(state = initialState, action) {
+function reducer(state, action) {
   switch (action.type) {
-    case 'REORDER': {
-      const items = Array.from(state.sections);
-      const [moved] = items.splice(action.payload.sourceIndex, 1);
-      items.splice(action.payload.destIndex, 0, moved);
-      return { ...state, sections: items };
-    }
-    case 'SELECT':
-      return { ...state, activeKey: action.payload };
-
-    case 'ADD_SECTION': {
-      // payload is the template ID (e.g. 'education', 'experience', etc.)
-      const tplId = action.payload;
-      const tpl   = TEMPLATES[tplId] || { id: 'custom', title: 'New Section', content: '<p>New…</p>' };
-      const key   = `${tplId}-${Date.now()}`;
-      // Personal template has fields, other templates use content
-      const section = tpl.fields
-        ? { key, ...tpl }
-        : { key, id: tpl.id, title: tpl.title, content: tpl.content };
+    case 'UPDATE_CONTACT':
+      return { ...state, contact: { ...state.contact, [action.field]: action.value } };
+    case 'UPDATE_SUMMARY':
+      return { ...state, summary: action.value };
+    case 'ADD_QUAL':
       return {
         ...state,
-        sections: [...state.sections, section],
-        activeKey: key,
+        quals: [...state.quals, { id: state.nextQualId, title: 'New Section', content: '' }],
+        nextQualId: state.nextQualId + 1,
       };
-    }
-
-    case 'REMOVE_SECTION': {
-      const filtered = state.sections.filter(s => s.key !== action.payload);
-      const newActive =
-        state.activeKey === action.payload && filtered.length
-          ? filtered[0].key
-          : state.activeKey;
-      return { ...state, sections: filtered, activeKey: newActive };
-    }
-
-    case 'TITLE_CHANGE':
+    case 'UPDATE_QUAL':
       return {
         ...state,
-        sections: state.sections.map(s =>
-          s.key === action.payload.key
-            ? { ...s, title: action.payload.title }
-            : s
+        quals: state.quals.map(q =>
+          q.id === action.id ? { ...q, [action.key]: action.value } : q
         ),
       };
-
-    case 'CONTENT_CHANGE':
-      return {
-        ...state,
-        sections: state.sections.map(s =>
-          s.key === action.payload.key
-            ? { ...s, content: action.payload.content }
-            : s
-        ),
-      };
-
-    case 'FIELD_CHANGE':
-      return {
-        ...state,
-        sections: state.sections.map(s => {
-          if (s.key !== action.payload.secKey) return s;
-          return {
-            ...s,
-            fields: s.fields.map(f =>
-              f.key === action.payload.fieldKey
-                ? { ...f, value: action.payload.value }
-                : f
-            ),
-          };
-        }),
-      };
-
-    case 'ADD_FIELD':
-      return {
-        ...state,
-        sections: state.sections.map(s =>
-          s.key === action.payload
-            ? {
-                ...s,
-                fields: [
-                  ...s.fields,
-                  { key: `field-${Date.now()}`, label: 'Custom', value: '' },
-                ],
-              }
-            : s
-        ),
-      };
-
+    case 'REMOVE_QUAL':
+      return { ...state, quals: state.quals.filter(q => q.id !== action.id) };
     default:
       return state;
   }
 }
 
 export default function CVBuilder() {
+  const [step, setStep] = useState(0);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [step, setStep]   = useState(0);
-  const previewRef        = useRef();
+  const previewRef = useRef();
 
-  const steps = state.sections;
-  const currentSection = steps[step];
-
-  // PDF download
   const downloadPDF = async () => {
+    if (!previewRef.current) return;
     const canvas = await html2canvas(previewRef.current, { scale: 2 });
     const img    = canvas.toDataURL('image/png');
     const pdf    = new jsPDF('p','pt','a4');
@@ -149,50 +76,30 @@ export default function CVBuilder() {
     <div className="cv-builder-container">
       <Toolbar />
 
-      <div className="builder-header">
-        <StepIndicator steps={steps} current={step} />
-      </div>
-
       <div className="builder-body">
-        {/* ← REPLACE your old form-panel with Sidebar */}
         <Sidebar
-          sections={state.sections}
-          activeKey={state.activeKey}
-          onSelect={(key) => {
-            const idx = state.sections.findIndex(s => s.key === key);
-            if (idx >= 0) setStep(idx);
-            dispatch({ type: 'SELECT', payload: key });
-          }}
-          onReorder={({ sourceIndex, destIndex }) =>
-            dispatch({ type: 'REORDER', payload: { sourceIndex, destIndex } })
-          }
-          onAddSection={(tplId) => dispatch({ type: 'ADD_SECTION', payload: tplId })}
-          onRemoveSection={(key) => dispatch({ type: 'REMOVE_SECTION', payload: key })}
-          onTitleChange={(key, title) =>
-            dispatch({ type: 'TITLE_CHANGE', payload: { key, title } })
-          }
-          onDownload={downloadPDF}
-          theme="light"  // or "dark"
+          steps          ={WIZARD_STEPS}
+          currentStep    ={step}
+          onChangeStep   ={setStep}
+          onDownload     ={downloadPDF}
+          // For contact fields
+          contact        ={state.contact}
+          onContactChange={(f,v)=>dispatch({ type:'UPDATE_CONTACT', field:f, value:v })}
+          // For professional summary
+          summary        ={state.summary}
+          onSummaryChange={v=>dispatch({ type:'UPDATE_SUMMARY', value:v })}
+          // For qualifications
+          quals          ={state.quals}
+          onAddQual      ={()=>dispatch({ type:'ADD_QUAL' })}
+          onUpdateQual   ={(id,key,v)=>dispatch({ type:'UPDATE_QUAL', id, key, value:v })}
+          onRemoveQual   ={id=>dispatch({ type:'REMOVE_QUAL', id })}
         />
 
         <div className="preview-panel" ref={previewRef}>
           <Preview
-            sections={state.sections}
-            activeKey={currentSection.key}
-            renderActive={() => (
-              <SectionEditor
-                section={currentSection}
-                onContentChange={(k, c) =>
-                  dispatch({ type: 'CONTENT_CHANGE', payload: { key: k, content: c } })
-                }
-                onFieldChange={(secKey, fieldKey, v) =>
-                  dispatch({ type: 'FIELD_CHANGE', payload: { secKey, fieldKey, value: v } })
-                }
-                onAddField={(secKey) =>
-                  dispatch({ type: 'ADD_FIELD', payload: secKey })
-                }
-              />
-            )}
+            contact={state.contact}
+            summary={state.summary}
+            quals  ={state.quals}
           />
         </div>
       </div>

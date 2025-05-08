@@ -1,47 +1,32 @@
+// src/components/Preview.js
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function Preview({ sections, activeKey, renderActive }) {
-  // Guard against undefined
-  const safeSections = Array.isArray(sections) ? sections : [];
-
-  const personal = safeSections.find((s) => s.id === 'personal');
-
+export default function Preview({ contact, summary, quals }) {
   return (
-    <div className="cv-preview">
-      {personal && (
-        <div className="personal-header">
-          <h1>
-            {personal.fields.find((f) => f.key === 'name')?.value || 'Your Name'}
-          </h1>
-          <p className="contact-line">
-            {personal.fields.find((f) => f.key === 'email')?.value} |{' '}
-            {personal.fields.find((f) => f.key === 'phone')?.value}
-          </p>
-        </div>
-      )}
-
-      {safeSections
-        .filter((s) => s.id !== 'personal')
-        .map((s) => (
-          <section key={s.key} className="cv-section">
-            <h3 className="cv-section-heading">{s.title}</h3>
-            {s.key === activeKey ? (
-              renderActive()
-            ) : (
-              <div
-                className="rich-display"
-                dangerouslySetInnerHTML={{ __html: s.content }}
-              />
-            )}
-          </section>
-        ))}
+    <div className="cv-preview" style={{ padding: '2rem' }}>
+      <section>
+        <h1>{contact.name || 'Your Name'}</h1>
+        <p>
+          {contact.email} {contact.phone} {contact.address}
+        </p>
+      </section>
+      <section>
+        <h2>Summary</h2>
+        <p>{summary}</p>
+      </section>
+      {quals.map((q) => (
+        <section key={q.id}>
+          <h2>{q.title}</h2>
+          <p>{q.content}</p>
+        </section>
+      ))}
     </div>
   );
 }
 
 Preview.propTypes = {
-  sections:     PropTypes.array,
-  activeKey:    PropTypes.string.isRequired,
-  renderActive: PropTypes.func.isRequired,
+  contact: PropTypes.object.isRequired,
+  summary: PropTypes.string.isRequired,
+  quals:   PropTypes.array.isRequired,
 };

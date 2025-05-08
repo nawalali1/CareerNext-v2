@@ -4,102 +4,96 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 export default function ChatPanel() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { from: 'bot', text: 'Hello! I’m your AI assistant. How can I help today?' },
+  const [open, setOpen]       = useState(false);
+  const [msgs, setMsgs]       = useState([
+    { from: 'bot', text: '👋 Paste your job brief and hit 🔄 to reword.' },
   ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef(null);
+  const [input, setInput]     = useState('');
+  const [loading, setLoading] = useState(false);
+  const scrollRef             = useRef(null);
 
-  // Auto-scroll when messages or panel state changes
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, isOpen]);
+  }, [msgs, open]);
 
-  const togglePanel = () => {
-    setIsOpen((open) => !open);
-  };
+  const send = async (reword = false) => {
+    const txt = input.trim();
+    if (!txt || loading) return;
 
-  const sendMessage = async () => {
-    const text = input.trim();
-    if (!text || isLoading) return;
-
-    // Add user's message immediately
-    setMessages((prev) => [...prev, { from: 'user', text }]);
+    setMsgs((prev) => [...prev, { from: 'user', text: txt }]);
     setInput('');
-    setIsLoading(true);
+    setLoading(true);
 
     try {
       const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        method:  'POST',
+        headers: { 'Content-Type':'application/json' },
+        body:    JSON.stringify({ message: txt, reword }),
       });
-
-      // Parse JSON regardless of status
-      const data = await res.json();
-
-      if (!res.ok) {
-        // Instead of throwing, add error message to chat
-        const errMsg = data.error || data.text || `Error ${res.status}`;
-        setMessages((prev) => [
-          ...prev,
-          { from: 'bot', text: `⚠️ ${errMsg}` },
-        ]);
-        return;
-      }
-
-      // On success, append AI's reply
-      setMessages((prev) => [...prev, { from: 'bot', text: data.text }]);
-    } catch (err) {
-      console.error('ChatPanel error:', err);
-      setMessages((prev) => [
+      const { text, error } = await res.json();
+      setMsgs((prev) => [
         ...prev,
-        { from: 'bot', text: 'Sorry, something went wrong.' },
+        { from: 'bot', text: error ? `⚠️ ${error}` : text },
+      ]);
+    } catch (err) {
+      console.error(err);
+      setMsgs((prev) => [
+        ...prev,
+        { from: 'bot', text: '⚠️ Request failed.' },
       ]);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className={`chat-panel ${isOpen ? 'open' : 'closed'}`}>
+    <div className={`chat-panel ${open ? 'open' : 'closed'}`}>
       <div className="chat-header">
         <h3>AI Assistant</h3>
         <button
           className="collapse-btn"
-          onClick={togglePanel}
-          aria-label={isOpen ? 'Collapse chat' : 'Expand chat'}
+          onClick={() => setOpen((o) => !o)}
+          aria-label={open ? 'Collapse chat' : 'Expand chat'}
         >
-          {isOpen ? '←' : '→'}
+          {open ? '←' : '→'}
         </button>
       </div>
 
-      {isOpen && (
+      {open && (
         <>
           <div className="messages" ref={scrollRef}>
-            {messages.map((m, i) => (
+            {msgs.map((m, i) => (
               <div key={i} className={`message ${m.from}`}>
                 {m.text}
               </div>
             ))}
-            {isLoading && <div className="message bot">Thinking… 🤖</div>}
+            {loading && <div className="message bot">🤖 thinking…</div>}
           </div>
 
           <div className="input-area">
             <input
               type="text"
-              placeholder="Type your message…"
+              placeholder="Paste job brief here…"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              disabled={isLoading}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && send()}
+              disabled={loading}
             />
-            <button onClick={sendMessage} disabled={isLoading} aria-label="Send">
+            <button
+              onClick={() => send(false)}
+              disabled={loading || !input.trim()}
+              aria-label="Send"
+            >
               ➤
+            </button>
+            <button
+              onClick={() => send(true)}
+              disabled={loading || !input.trim()}
+              aria-label="Reword Brief"
+            >
+              🔄
             </button>
           </div>
         </>

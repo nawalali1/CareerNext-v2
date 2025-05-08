@@ -1,235 +1,148 @@
+/* src/styles/Sidebar.css */
+
 :root {
-    --sidebar-bg:      #fff;
-    --sidebar-border:  #e5e7eb;
-    --text-primary:    #374151;
-    --text-secondary:  #64748b;
-    --accent:          #00bcd4;
-    --danger:          #e11d48;
-    --hover-bg:        #f2f4f7;
-    --active-bg:       #e0f7fa;
-    --tooltip-bg:      rgba(0,0,0,0.75);
-    --tooltip-fg:      #fff;
-    --dark-sidebar-bg: #1f2937;
-    --dark-text:       #e5e7eb;
+    --color-text:       #212529;
+    --color-secondary:  #6c757d;
+    --color-accent:     #007bff;
+    --color-bg-light:   #f8f9fa;
+    --color-border:     #dee2e6;
+    --color-danger:     #dc3545;
   }
-  [data-theme="dark"] .cv-sidebar {
-    background: var(--dark-sidebar-bg);
-    color: var(--dark-text);
-    border-color: var(--sidebar-border);
-  }
+  
   .cv-sidebar {
-    width: 280px;
-    background: var(--sidebar-bg);
-    border-right: 1px solid var(--sidebar-border);
-    padding: 1rem;
     display: flex;
     flex-direction: column;
-    transition: width 0.3s ease, padding 0.3s ease;
-    overflow: hidden;
-    position: relative;
+    width: 280px;
+    height: 100%;
+    background: #fff;
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text);
   }
   
-  /* ─── COLLAPSED ───────────────────────────────────────────────────────── */
-  .cv-sidebar.collapsed {
-    width: 60px;
-    padding: 1rem 0.5rem;
-  }
-  .cv-sidebar.collapsed .sidebar-header ~ *,
-  .cv-sidebar.collapsed .template-menu,
-  .cv-sidebar.collapsed .search-box,
-  .cv-sidebar.collapsed .sidebar-list,
-  .cv-sidebar.collapsed .sidebar-footer {
-    display: none;
-  }
-  
-  /* ─── HEADER & BREADCRUMB ─────────────────────────────────────────────── */
-  .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-  .sidebar-breadcrumb {
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .sidebar-header-controls {
-    display: flex;
-    gap: 0.5rem;
-  }
-  .sidebar-header-controls button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-secondary);
-    position: relative;
-  }
-  .sidebar-header-controls button:hover {
-    color: var(--accent);
-  }
-  
-  /* ─── TOOLTIP ─────────────────────────────────────────────────────────── */
-  [data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0.25rem 0.5rem;
-    background: var(--tooltip-bg);
-    color: var(--tooltip-fg);
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  [data-tooltip]:hover::after {
-    opacity: 1;
-  }
-  
-  /* ─── TEMPLATE MENU ───────────────────────────────────────────────────── */
-  .template-menu {
-    list-style: none;
-    margin: 0.5rem 0;
-    padding: 0;
-    background: var(--sidebar-bg);
-    border: 1px solid var(--sidebar-border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .template-menu li button {
-    width: 100%;
-    padding: 0.5rem;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-  }
-  .template-menu li button:hover {
-    background: var(--hover-bg);
-  }
-  
-  /* ─── SEARCH BOX ───────────────────────────────────────────────────────── */
-  .search-box {
+  /* Wizard Header */
+  .sidebar-wizard-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--sidebar-border);
-    border-radius: 4px;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
   }
-  .search-box input {
+  .sidebar-wizard-header button {
+    background: none;
     border: none;
-    outline: none;
+    color: var(--color-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+  .sidebar-wizard-header button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .sidebar-wizard-header h2 {
     flex: 1;
-    font-size: 0.9rem;
+    margin: 0;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
   }
   
-  /* ─── GROUPS & LIST ───────────────────────────────────────────────────── */
-  .sidebar-list {
+  /* Content Area */
+  .sidebar-content {
     flex: 1;
+    padding: 1rem;
+    background: var(--color-bg-light);
     overflow-y: auto;
   }
-  .sidebar-group {
-    margin-bottom: 0.75rem;
+  
+  /* Form Rows (Contact & Summary) */
+  .form-row {
+    margin-bottom: 1rem;
   }
-  .group-title {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+  .form-row label {
+    display: block;
     margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+  .form-row input,
+  .form-row textarea {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: #fff;
+    box-sizing: border-box;
   }
   
-  /* ─── ITEMS & DRAG HANDLE ─────────────────────────────────────────────── */
-  .sidebar-item {
-    display: flex;
-    align-items: center;
-    padding: 0 0.5rem;
-    height: 50px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  /* Qualifications Sections */
+  .qual-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
   }
-  .sidebar-item:hover {
-    background: var(--hover-bg);
+  .qual-section input {
+    margin-bottom: 0.5rem;
   }
-  .sidebar-item.active {
-    background: var(--active-bg);
+  .qual-section textarea {
+    margin-bottom: 0.5rem;
   }
-  .move-handle {
-    width: 24px;
-    text-align: center;
-    color: var(--text-secondary);
-    visibility: hidden;
-  }
-  .sidebar-item:hover .move-handle {
-    visibility: visible;
-  }
-  
-  /* ─── TITLE INPUT & REMOVE ────────────────────────────────────────────── */
-  .section-title-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    padding: 0 0.5rem;
-    font-size: 0.9rem;
-    background: transparent;
-  }
-  .remove-btn {
+  .qual-section button {
     background: none;
     border: none;
-    color: var(--danger);
-    padding: 0.25rem;
-    position: relative;
+    color: var(--color-danger);
+    cursor: pointer;
+    font-size: 0.875rem;
   }
   
-  /* ─── CONTEXT MENU ────────────────────────────────────────────────────── */
-  .context-menu {
-    position: fixed;
-    list-style: none;
-    margin: 0;
-    padding: 0.25rem 0;
-    background: var(--sidebar-bg);
-    border: 1px solid var(--sidebar-border);
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    z-index: 200;
-  }
-  .context-menu li {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+  /* Inline “Add Section” on Qualifications */
+  .sidebar-content > .add-qual-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    background: none;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: background-color 0.2s;
   }
-  .context-menu li:hover {
-    background: var(--hover-bg);
+  .sidebar-content > .add-qual-btn:hover {
+    background: rgba(0, 123, 255, 0.1);
   }
   
-  /* ─── FOOTER (BULK & DOWNLOAD) ────────────────────────────────────────── */
+  /* Footer (Download PDF) */
   .sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--color-border);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5rem;
+    justify-content: flex-end;
   }
-  .bulk-btn,
-  .download-btn {
+  .sidebar-footer .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 4px;
     background: none;
-    border: none;
+    border: 1px solid var(--color-secondary);
+    color: var(--color-secondary);
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    color: var(--text-secondary);
-    position: relative;
+    transition: background-color 0.2s;
   }
-  .bulk-btn:hover,
-  .download-btn:hover {
-    color: var(--accent);
+  .sidebar-footer .download-btn:hover {
+    background: rgba(108, 117, 125, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    .cv-sidebar {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid var(--color-border);
+    }
   }
   
