@@ -8,7 +8,7 @@ Modal.setAppElement("#__next");
 export default function Results() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [recs, setRecs]       = useState([]);
+  const [recs, setRecs] = useState([]);
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
@@ -43,26 +43,37 @@ export default function Results() {
 
   return (
     <div className="results-container">
+      <header className="results-header">
+        <h1>Your Top 5 Career Matches</h1>
+        <p>Based on your quiz answers, here are the roles you’re most aligned with:</p>
+      </header>
+
       <div className="recommendations-grid">
         {recs.map((r, i) => (
           <div key={i} className="recommendation-item">
             <h3 className="recommendation-title">{r.title}</h3>
+            {/* explanation removed from card */}
+
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
               <button
                 className="learn-more-btn"
                 onClick={() => setSelected(r)}
               >
-                Learn More
+                Learn More <span className="chevron">›</span>
               </button>
               <button
                 className="learn-more-btn"
                 onClick={() =>
-                  router.push(
-                    `/jobs?category=${encodeURIComponent(r.title)}`
-                  )
+                  router.push({
+                    pathname: "/jobs",
+                    query: {
+                      degree: r.title,
+                      location: "",
+                    },
+                  })
                 }
               >
-                View Jobs
+                View Jobs <span className="chevron">›</span>
               </button>
             </div>
           </div>

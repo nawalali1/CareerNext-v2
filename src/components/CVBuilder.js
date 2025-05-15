@@ -17,11 +17,8 @@ const WIZARD_STEPS = [
 ];
 
 const initialState = {
-  // contact fields
   contact: { name: '', email: '', phone: '', address: '' },
-  // single summary field
   summary: '',
-  // quals: can add/remove custom sections on top of these three
   quals: [
     { id: 1, title: 'Education',  content: '' },
     { id: 2, title: 'Experience', content: '' },
@@ -61,6 +58,17 @@ export default function CVBuilder() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const previewRef = useRef();
 
+  // AI-assistant drawer logic: show every mount after 500ms
+  const [showHelper, setShowHelper] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShowHelper(true), 500);
+    return () => clearTimeout(t);
+  }, []);
+
+  const closeHelper = () => {
+    setShowHelper(false);
+  };
+
   const downloadPDF = async () => {
     if (!previewRef.current) return;
     const canvas = await html2canvas(previewRef.current, { scale: 2 });
@@ -74,6 +82,18 @@ export default function CVBuilder() {
 
   return (
     <div className="cv-builder-container">
+      {/* AI Helper Drawer */}
+      <div className={`ai-drawer${showHelper ? ' open' : ''}`}>
+        <button className="ai-drawer-close" onClick={closeHelper}>×</button>
+        <div className="ai-drawer-content">
+          <h3>Need a hand?</h3>
+          <p>
+            Use the AI Chat Panel to paste a job brief or ask for bullet-points, summaries
+            and more, right here while you build your CV!
+          </p>
+        </div>
+      </div>
+
       <Toolbar />
 
       <div className="builder-body">
@@ -82,13 +102,10 @@ export default function CVBuilder() {
           currentStep    ={step}
           onChangeStep   ={setStep}
           onDownload     ={downloadPDF}
-          // For contact fields
           contact        ={state.contact}
           onContactChange={(f,v)=>dispatch({ type:'UPDATE_CONTACT', field:f, value:v })}
-          // For professional summary
           summary        ={state.summary}
           onSummaryChange={v=>dispatch({ type:'UPDATE_SUMMARY', value:v })}
-          // For qualifications
           quals          ={state.quals}
           onAddQual      ={()=>dispatch({ type:'ADD_QUAL' })}
           onUpdateQual   ={(id,key,v)=>dispatch({ type:'UPDATE_QUAL', id, key, value:v })}

@@ -11,15 +11,35 @@
   --text-body: #334e68;
   --font-heading: 'Poppins', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --border-radius: 16px;
 }
 
 /* -------------- PAGE WRAPPER -------------- */
 .results-container {
-  max-width: 960px;
+  max-width: 1140px;                /* widened from 960px */
   margin: 6rem auto;
-  padding: 0 1rem;
+  padding: 2rem 1rem;
   font-family: var(--font-body);
+  background: var(--bg-page);       /* light tint instead of pure white */
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
+}
+
+/* -------------- OPTIONAL HEADER -------------- */
+.results-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.results-header h1 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--text-heading);
+  margin-bottom: 0.5rem;
+}
+.results-header p {
+  color: var(--text-body);
+  font-size: 1rem;
 }
 
 /* -------------- GRID OF CARDS -------------- */
@@ -27,16 +47,16 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* -------------- INDIVIDUAL CARD -------------- */
 .recommendation-item {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -44,8 +64,8 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .recommendation-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
 }
 
 /* -------------- CARD HEADER -------------- */
@@ -58,23 +78,41 @@
   line-height: 1.2;
 }
 
-/* -------------- LEARN MORE BUTTON -------------- */
+/* -------------- CARD BODY TEXT -------------- */
+.recommendation-body {
+  font-size: 1rem;
+  color: var(--text-body);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* -------------- LEARN MORE / VIEW JOBS BUTTON -------------- */
 .learn-more-btn {
   align-self: flex-start;
-  margin-top: 1rem;
-  padding: 0.5rem 1.25rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.25rem;
   background: var(--accent-start);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
   transition: background 0.2s, transform 0.2s;
+}
+.learn-more-btn .chevron {
+  display: inline-block;
+  margin-left: 0.5rem;
+  transition: transform 0.2s;
 }
 .learn-more-btn:hover {
   background: var(--accent-end);
   transform: translateY(-2px);
+}
+.learn-more-btn:hover .chevron {
+  transform: translateX(4px);
 }
 
 /* -------------- LOADING / ERROR TEXT -------------- */
@@ -105,8 +143,8 @@
   padding: 2rem;
   max-width: 500px;
   width: 90%;
-  border-radius: 12px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
   outline: none;
   position: relative;
 }
@@ -129,11 +167,11 @@
 .modal-close-btn {
   display: block;
   margin-left: auto;
-  padding: 0.5rem 1.25rem;
+  padding: 0.6rem 1.25rem;
   background: var(--accent-start);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -153,5 +191,18 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* -------------- RESPONSIVE -------------- */
+@media (max-width: 768px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .learn-more-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
