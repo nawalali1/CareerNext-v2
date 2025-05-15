@@ -1,4 +1,4 @@
-// components/Jobs.js
+// src/components/Jobs.js
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -27,20 +27,20 @@ export default function Jobs({ degree = "", jobs = [], filters = {} }) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
-  // filter inputs
+  //filter inputs
   const [location,   setLocation]   = useState(filters.location   || "");
   const [jobType,    setJobType]    = useState(filters.job_type   || "");
   const [salaryMin,  setSalaryMin]  = useState(Number(filters.salary_min) || 0);
   const [salaryMax,  setSalaryMax]  = useState(Number(filters.salary_max) || 0);
   const [postedDays, setPostedDays] = useState(filters.posted_days || "");
 
-  // expand & copy state
+  //expand & copy state
   const [expanded,    setExpanded]    = useState({});
   const [copySuccess, setCopySuccess] = useState({});
 
   useEffect(() => {
     setMounted(true);
-    // reset on HMR/props change
+    //reset on HMR/props change
     setLocation(filters.location   || "");
     setJobType(filters.job_type    || "");
     setSalaryMin(Number(filters.salary_min) || 0);

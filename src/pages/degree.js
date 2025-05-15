@@ -1,3 +1,4 @@
+// src/pages/degree.js
 import Head from "next/head";
 import Degree from "../components/Degree";
 

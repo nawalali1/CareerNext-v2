@@ -1,3 +1,4 @@
+// src/components/Signup.js
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { createUserWithEmailAndPassword } from "firebase/auth";

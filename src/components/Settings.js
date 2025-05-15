@@ -51,7 +51,7 @@ export default function Settings() {
   const user = auth.currentUser;
   const [activeTab, setActiveTab] = useState("Profile");
 
-  // ── Profile
+  // Profile
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName]   = useState("");
   const [email, setEmail]         = useState(user?.email || "");
@@ -63,16 +63,16 @@ export default function Settings() {
   const [profileMsg, setProfileMsg]       = useState("");
   const [loadingProfile, setLoadingProfile] = useState(false);
 
-  // ── Security
+  // Security
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd, setNewPwd]         = useState("");
   const [securityMsg, setSecurityMsg] = useState("");
 
-  // ── Notifications
+  // Notifications
   const [jobAlerts, setJobAlerts]         = useState(false);
   const [weeklySummary, setWeeklySummary] = useState(false);
 
-  // ── Preferences & Theme
+  // Preferences & Theme
   const [language, setLanguage] = useState("en");
   const [country, setCountry]   = useState("gb");
   const [prefMsg, setPrefMsg]   = useState("");
@@ -82,14 +82,14 @@ export default function Settings() {
       : "light"
   );
 
-  // ── Integrations
+  // Integrations
   const [googleDrive, setGoogleDrive] = useState(false);
   const [teams, setTeams]             = useState(false);
 
-  // ── Privacy
+  // Privacy
   const [deleteMsg, setDeleteMsg] = useState("");
 
-  // ── Load on mount
+  // Load on mount
   useEffect(() => {
     if (!user) return;
     // Name split
@@ -118,7 +118,7 @@ export default function Settings() {
     document.documentElement.setAttribute("data-theme", theme);
   }, [user]);
 
-  // ── Handlers
+  // Handlers
 
   // Profile Save
   const handleSaveProfile = async () => {

@@ -3,7 +3,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_API_KEY,  // your .env.local key
+  apiKey: process.env.GOOGLE_API_KEY,  //my .env.local key
 });
 
 export default async function handler(req, res) {
@@ -17,11 +17,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ← Use the Developer API's flash model
+    //Developer API's flash model
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-001",
       contents: prompt,
-      // optional: temperature, maxOutputTokens, etc.
+      //optional: temperature, maxOutputTokens, etc.
     });
 
     return res.status(200).json({ text: response.text });

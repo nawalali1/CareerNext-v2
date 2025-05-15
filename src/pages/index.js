@@ -1,3 +1,4 @@
+// src/pages/index.js
 import Head from "next/head";
 import Home from "../components/Home";
 

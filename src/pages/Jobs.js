@@ -20,7 +20,7 @@ export async function getServerSideProps({ query }) {
   const appId  = process.env.ADZUNA_APP_ID;
   const appKey = process.env.ADZUNA_APP_KEY;
 
-  // 50-entry synonyms map
+  //50-entry synonyms map
   const synonymsMap = {
     "computer science": ["Software Engineer","Data Scientist","AI Engineer","Systems Analyst","Frontend Developer","Backend Developer"],
     "information technology": ["IT Support Specialist","Network Administrator","Systems Administrator","IT Consultant","Help Desk Technician"],
@@ -88,7 +88,7 @@ export async function getServerSideProps({ query }) {
     }
   }
 
-  // fetch up to 50 unique jobs
+  //fetch up to 50 unique jobs
   const seen = new Set();
   const results = [];
   for (const term of terms) {

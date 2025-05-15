@@ -37,12 +37,12 @@ export default function Preview({ contact, summary, quals }) {
 
 Preview.propTypes = {
   contact: PropTypes.object.isRequired,
-  summary: PropTypes.string.isRequired,   // HTML string from React Quill
+  summary: PropTypes.string.isRequired,   //HTML string from React Quill
   quals:   PropTypes.arrayOf(
     PropTypes.shape({
       id:      PropTypes.string.isRequired,
       title:   PropTypes.string.isRequired,
-      content: PropTypes.string.isRequired, // HTML string
+      content: PropTypes.string.isRequired, //HTML string
     })
   ).isRequired,
 };

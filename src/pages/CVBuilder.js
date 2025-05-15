@@ -2,9 +2,9 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 
-// Dynamically import your CVBuilder component from src/components
+//Dynamically import the CVBuilder component from src/components
 const CVBuilder = dynamic(() => import('../components/CVBuilder'), {
-  ssr: false, // disable server‐side rendering if CVBuilder uses browser APIs
+  ssr: false, //disable server‐side rendering if CVBuilder uses browser APIs
 });
 
 export default function CVBuilderPage() {

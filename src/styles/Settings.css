@@ -1,3 +1,4 @@
+/* styles/Settings.css */
 :root {
   --bg-page: #f7f9fc;
   --bg-sidebar: #ffffff;
@@ -262,7 +263,7 @@ button.danger:hover {
   --bg-page: #121212;
   --bg-sidebar: #1e1e1e;
   --bg-content: #1c1c1c;
-  --accent: #4da6ff;       /* lighter blue for contrast */
+  --accent: #4da6ff;       
   --accent-light: #336bbf;
   --text-dark: #eceff4;
   --text-muted: #a3a3a3;

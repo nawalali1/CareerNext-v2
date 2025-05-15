@@ -16,11 +16,11 @@
 
 /* -------------- PAGE WRAPPER -------------- */
 .results-container {
-  max-width: 1140px;                /* widened from 960px */
+  max-width: 1140px;                
   margin: 6rem auto;
   padding: 2rem 1rem;
   font-family: var(--font-body);
-  background: var(--bg-page);       /* light tint instead of pure white */
+  background: var(--bg-page);       
   border-radius: var(--border-radius);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;

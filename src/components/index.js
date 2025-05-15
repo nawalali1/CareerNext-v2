@@ -1,3 +1,4 @@
+// src/components/index.js
 import React from 'react';
 import Home from './Home';
 

@@ -13,17 +13,17 @@ export default function SettingsPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        // If no user, send them to login
+        //If no user, send them to login
         router.replace("/login");
       } else {
-        // Logged in — show the page
+        //Logged in — show the page
         setLoading(false);
       }
     });
     return unsubscribe;
   }, [auth, router]);
 
-  // While we’re checking auth, show a placeholder
+  //While checking auth, show a placeholder
   if (loading) {
     return <p style={{ padding: "2rem", marginTop: "4rem" }}>Loading…</p>;
   }

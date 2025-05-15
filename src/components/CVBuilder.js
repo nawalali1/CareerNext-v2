@@ -58,7 +58,7 @@ export default function CVBuilder() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const previewRef = useRef();
 
-  // AI-assistant drawer logic: show every mount after 500ms
+  //AI-assistant drawer logic: show every mount after 500ms
   const [showHelper, setShowHelper] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setShowHelper(true), 500);

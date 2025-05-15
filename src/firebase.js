@@ -4,7 +4,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
-import { getStorage } from "firebase/storage";     // ← add Storage
+import { getStorage } from "firebase/storage";     
 
 // Read values from .env.local
 const firebaseConfig = {
@@ -27,7 +27,7 @@ export const auth = getAuth(app);
 export const db   = getFirestore(app);
 
 // Storage
-export const storage = getStorage(app);            // ← export Storage
+export const storage = getStorage(app);            
 
 // Analytics (browser-only)
 if (typeof window !== "undefined") {

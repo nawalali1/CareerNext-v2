@@ -1,3 +1,4 @@
+// src/pages/loading.js
 import Head from "next/head";
 import LoadingScreen from "../components/LoadingScreen";
 

@@ -180,7 +180,7 @@
 .ai-drawer {
   position: absolute;
   right: 1.5rem;
-  top: 1.5rem;                      /* lifted up for easy spotting */
+  top: 1.5rem;                      
   width: 320px;
   max-width: 80vw;
   background: var(--color-bg-section); /* keep drawer background white */

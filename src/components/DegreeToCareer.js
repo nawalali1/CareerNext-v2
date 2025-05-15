@@ -8,7 +8,7 @@ export default function DegreeToCareer() {
 
   useEffect(() => {
     if (career) {
-      // Auto-redirect to /jobs?degree=…
+      //Auto-redirect to /jobs?degree=…
       router.push(`/jobs?degree=${encodeURIComponent(career)}`);
     }
   }, [career]);

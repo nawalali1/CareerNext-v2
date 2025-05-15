@@ -1,3 +1,4 @@
+// src/components/LoadingScreen.js
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -19,7 +20,7 @@ export default function LoadingScreen() {
         const match = raw.match(/\{[\s\S]*\}/);
         if (match) {
           const parsed = JSON.parse(match[0]);
-          // For 5 recommendations:
+          //For 5 recommendations:
           localStorage.setItem(
             "cn_recs",
             JSON.stringify(parsed.recommendations || [])
@@ -27,7 +28,7 @@ export default function LoadingScreen() {
         }
       } catch (e) {
         console.error("API error:", e);
-        // store empty array so Results shows fallback
+        //store empty array so Results shows fallback
         localStorage.setItem("cn_recs", JSON.stringify([]));
       } finally {
         router.push("/results");

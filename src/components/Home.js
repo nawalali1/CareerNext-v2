@@ -1,4 +1,4 @@
-// components/Home.js
+// src/components/Home.js
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { AiOutlineSearch, AiOutlineDown } from "react-icons/ai";
@@ -13,7 +13,7 @@ import {
 export default function Home() {
   const router = useRouter();
 
-  // Testimonials state
+  //Testimonials state
   const testimonials = [
     {
       name: "Alice Johnson",
@@ -37,7 +37,7 @@ export default function Home() {
   const prevTestimonial = () =>
     setTestiIndex((testiIndex - 1 + testimonials.length) % testimonials.length);
 
-  // Search form state
+  //Search form state
   const [jobQuery, setJobQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -49,12 +49,12 @@ export default function Home() {
   const suggestionTimer = useRef(null);
   const countTimer = useRef(null);
 
-  // Modal state for footer links
+  //Modal state for footer links
   const [showAbout, setShowAbout] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
 
-  // Autocomplete suggestions (debounced)
+  //Autocomplete suggestions (debounced)
   useEffect(() => {
     clearTimeout(suggestionTimer.current);
     if (jobQuery.trim().length < 2) {
@@ -72,7 +72,7 @@ export default function Home() {
     return () => clearTimeout(suggestionTimer.current);
   }, [jobQuery]);
 
-  // Live job count (debounced)
+  //Live job count (debounced)
   useEffect(() => {
     clearTimeout(countTimer.current);
     if (jobQuery.trim().length < 2) {

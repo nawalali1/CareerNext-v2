@@ -26,6 +26,7 @@ import "react-quill/dist/quill.snow.css";
 import Navbar from "../components/Navbar";
 import ChatPanel from "../components/ChatPanel";
 import PrivateRoute from "../components/PrivateRoute";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 const protectedRoutes = ["/cvbuilder", "/results"];
 const chatRoutes      = ["/cvbuilder"];
@@ -35,7 +36,7 @@ export default function App({ Component, pageProps, router }) {
   const isProtected   = protectedRoutes.includes(path);
   const showChatPanel = chatRoutes.includes(path);
 
-  // Apply persisted theme on first render
+  //theme on first render
   useEffect(() => {
     if (typeof window !== "undefined") {
       const t = localStorage.getItem("theme") || "light";
@@ -44,7 +45,7 @@ export default function App({ Component, pageProps, router }) {
   }, []);
 
   return (
-    <>
+    <ErrorBoundary>
       <Head>
         <title>CareerNext</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -65,6 +66,6 @@ export default function App({ Component, pageProps, router }) {
       ) : (
         <Component {...pageProps} />
       )}
-    </>
+    </ErrorBoundary>
   );
 }

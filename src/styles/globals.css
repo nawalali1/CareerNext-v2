@@ -49,7 +49,7 @@ body {
   --transition-fast: 150ms ease-in-out;
 }
 
-/* Dark mode override (if you toggle data-theme="dark" on <html>) */
+/* Dark mode override */
 [data-theme="dark"] {
   --color-bg:      #1f2937;
   --color-surface: #111827;

@@ -4,17 +4,17 @@ import Head from 'next/head';
 import Sidebar from '../components/Sidebar';
 
 export default function SidebarPage() {
-  // define your three wizard steps
+  //define three wizard steps
   const steps = [
     { key: 'contact', title: 'Contact Details' },
     { key: 'summary', title: 'Professional Summary' },
     { key: 'quals',   title: 'Qualifications' },
   ];
 
-  // current step index
+  //current step index
   const [currentStep, setCurrentStep] = useState(0);
 
-  // Step 1: contact
+  //Step 1: contact
   const [contact, setContact] = useState({
     name:    '',
     email:   '',
@@ -24,10 +24,10 @@ export default function SidebarPage() {
   const onContactChange = (field, value) =>
     setContact(c => ({ ...c, [field]: value }));
 
-  // Step 2: summary
+  //Step 2: summary
   const [summary, setSummary] = useState('');
 
-  // Step 3: qualifications
+  //Step 3: qualifications
   const [quals, setQuals]     = useState([
     { id: 1, title: 'Education',  content: '' },
     { id: 2, title: 'Experience', content: '' },
@@ -44,7 +44,7 @@ export default function SidebarPage() {
   };
   const onRemoveQual = (id) => setQuals(qs => qs.filter(q => q.id !== id));
 
-  // stub download handler
+  //stub download handler
   const onDownload = () => alert('Download PDF…');
 
   return (
