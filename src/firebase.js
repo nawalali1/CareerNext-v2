@@ -4,6 +4,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
+import { getStorage } from "firebase/storage";     // ← add Storage
 
 // Read values from .env.local
 const firebaseConfig = {
@@ -21,16 +22,18 @@ const app = !getApps().length
   ? initializeApp(firebaseConfig)
   : getApp();
 
-// Export Auth & Firestore
+// Auth & Firestore
 export const auth = getAuth(app);
 export const db   = getFirestore(app);
 
-// Initialize Analytics in browser
+// Storage
+export const storage = getStorage(app);            // ← export Storage
+
+// Analytics (browser-only)
 if (typeof window !== "undefined") {
   try {
     getAnalytics(app);
   } catch (e) {
-    // analytics can only be initialized once
     console.warn("Analytics already initialized or not supported:", e);
   }
 }

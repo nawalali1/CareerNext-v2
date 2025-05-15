@@ -1,49 +1,111 @@
+/* ─── Original Styles ─── */
+
 .degree-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 70px);
-    padding: 2rem;
-    font-family: 'Inter', sans-serif;
-    background: #f7f9fc;
-  }
-  
-  .degree-form {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-  }
-  
-  .degree-form h2 {
-    margin-bottom: 1rem;
-    color: #0077b6;
-  }
-  
-  .degree-form input {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-  
-  .degree-form button {
-    padding: 0.75rem 1.5rem;
-    background: #00bcd4;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  
-  .degree-form button:hover {
-    background: #0077b6;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 70px);
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  background: #f7f9fc;
+}
+
+.degree-form {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.degree-form h2 {
+  margin-bottom: 1rem;
+  color: #0077b6;
+}
+
+.degree-form input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.degree-form button {
+  padding: 0.75rem 1.5rem;
+  background: #00bcd4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.degree-form button:hover {
+  background: #0077b6;
+}
+
+/* ─── Improvements ─── */
+
+/* Quick-link chips below the heading */
+.degree-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.quick-link-chip {
+  background: #e0f7fa;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.quick-link-chip:hover {
+  background: #b2ebf2;
+}
+
+/* Wrapper to position suggestions */
+.degree-input-wrapper {
+  position: relative;
+  margin-bottom: 1rem;  /* ensure space for dropdown */
+}
+
+/* Re-style the existing input when wrapped */
+.degree-input-wrapper input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* Suggestions dropdown */
+.degree-suggestions {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+/* Individual suggestion item */
+.degree-suggestion-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.degree-suggestion-item:hover {
+  background: #f0f4f8;
+}

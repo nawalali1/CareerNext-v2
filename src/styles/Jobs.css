@@ -1,225 +1,293 @@
-/* ─── Container ─────────────────────────────────────────────────────────── */
-.jobs-container {
-  max-width: 900px;
-  margin: 6rem auto;
-  padding: 0 1rem;
-  font-family: 'Inter', sans-serif;
+:root {
+  --bg-page:       #f0f2f5;
+  --bg-sidebar:    #ffffff;
+  --bg-card:       #ffffff;
+  --txt-primary:   #1b1f23;
+  --txt-muted:     #6a737d;
+  --accent:        var(--chat-accent);
+  --accent-light:  var(--chat-hover);
+  --shadow:        rgba(0,0,0,0.05);
+  --radius:        12px;
+  --gap:           1.5rem;
+  --transition:    0.25s ease;
 }
 
-.jobs-container h1 {
-  text-align: center;
-  color: #102a43;
-  margin-bottom: 2rem;
-}
-
-/* ─── Filter Panel ───────────────────────────────────────────────────────── */
-.jobs-filters {
-  position: relative;
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.jobs-page {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 1rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-  margin-bottom: 2rem;
-  align-items: flex-end;
-}
-.jobs-filters::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 2rem;
-  background: linear-gradient(to right, #fff, transparent);
-}
-.jobs-filters::after {
-  content: '→';
-  position: absolute;
-  right: 0.75rem; top: 50%;
-  transform: translateY(-50%);
-  color: #64748b; font-size: 1.2rem;
-}
-.jobs-filters::-webkit-scrollbar {
-  height: 6px;
-}
-.jobs-filters::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.1);
-  border-radius: 3px;
+  gap: 1.5rem;
+  padding: calc(70px + 1.5rem) 1.5rem 1.5rem;
+  background: var(--bg-page);
 }
 
-/* ─── Filter Groups ─────────────────────────────────────────────────────── */
-.filter-group {
-  flex: 0 0 160px;
+.filters-sidebar {
+  flex: 0 0 280px;
+  background: var(--bg-sidebar);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px var(--shadow);
+  padding: var(--gap);
+  position: sticky;
+  top: calc(70px + var(--gap));
+}
+
+.filters-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  margin-bottom: var(--gap);
+  color: var(--txt-primary);
+}
+
+.jobs-filters {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
-.filter-group label {
-  font-size: 0.875rem;
-  color: #334e68;
-  margin-bottom: 0.25rem;
+
+.jobs-filters label {
+  font-size: 0.9rem;
+  color: var(--txt-primary);
 }
-.filter-group select {
+
+.jobs-filters select {
+  margin-top: 0.25rem;
   padding: 0.5rem;
+  font-size: 0.95rem;
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  appearance: none;
-  background: #fff url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath fill='%2364748B' d='M0 0l5 7 5-7z'/%3E%3C/svg%3E")
-              no-repeat right 0.75rem center;
+  background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7'><path fill='%2364748B' d='M0 0l5 7 5-7z'/></svg>") no-repeat right 0.75rem center;
   background-size: 10px 7px;
 }
 
-/* ─── Filter Buttons ────────────────────────────────────────────────────── */
 .filter-buttons {
-  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-left: auto;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
-.filter-buttons button {
-  padding: 0.6rem 1rem;
+
+.btn-apply,
+.btn-clear {
+  flex: 1;
+  padding: 0.6rem;
   font-size: 0.95rem;
   font-weight: 600;
-  border: none;
   border-radius: 6px;
+  border: none;
   cursor: pointer;
+  transition: background var(--transition);
 }
-.filter-buttons button[type="submit"] {
-  background: #00bcd4; color: #fff;
+
+.btn-apply {
+  background: var(--accent);
+  color: #fff;
 }
-.filter-buttons button[type="submit"]:hover {
-  background: #0077b6;
+.btn-apply:hover {
+  background: var(--accent-light);
 }
-.clear-filters {
+
+.btn-clear {
   background: transparent;
-  color: #64748b;
+  color: var(--txt-muted);
   text-decoration: underline;
-  font-size: 0.9rem;
 }
-.clear-filters:hover {
-  color: #334e68;
+.btn-clear:hover {
+  color: var(--txt-primary);
 }
 
-/* ─── No Results ───────────────────────────────────────────────────────── */
+/* ── Main Content ──────────────────────────────────────────────────────── */
+.jobs-content {
+  flex: 1;
+}
+
+.jobs-heading {
+  font-size: clamp(1.75rem, 5vw, 2rem);
+  color: var(--txt-primary);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.jobs-results-count {
+  font-size: 1rem;
+  color: var(--txt-muted);
+  margin-bottom: 1.5rem;
+}
+
 .no-results {
+  font-size: 1.1rem;
+  color: #dc2626;
   text-align: center;
-  color: #64748b;
-  margin-top: 2rem;
 }
 
-/* ─── Job Cards ─────────────────────────────────────────────────────────── */
+/* ── Jobs Grid ─────────────────────────────────────────────────────────── */
 .jobs-list {
   display: grid;
   gap: 1.5rem;
   list-style: none;
   padding: 0;
-}
-.job-card {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-}
-.job-card h2 {
-  color: #0077b6;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-.job-card .job-meta {
-  color: #334e68;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
-/* ─── View Details Button ───────────────────────────────────────────────── */
+/* ── Job Card ──────────────────────────────────────────────────────────── */
+.job-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+  animation-delay: calc(var(--i, 0) * 0.1s);
+}
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px var(--shadow);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Job Header (Title) ───────────────────────────────────────────────── */
+.job-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  /* gradient header */
+  background: linear-gradient(90deg, var(--chat-accent), var(--chat-hover));
+  color: #fff;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.job-icon {
+  font-size: 1.4rem;
+}
+
+.job-title {
+  margin: 0;
+  font-size: clamp(1rem, 3.5vw, 1.2rem);
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.job-meta {
+  padding: 0 1rem;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--txt-muted);
+  font-weight: 600;
+}
+
+/* ── View Details Button ───────────────────────────────────────────────── */
 .toggle-details {
-  display: inline-block;
-  background: #0077b6;
-  color: white;
+  align-self: flex-start;
+  margin: 0 1rem 1rem;
+  background: var(--accent);
+  color: #fff;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
-  margin-bottom: 1rem;
+  transition: background var(--transition);
 }
 .toggle-details:hover {
-  background: #005f6b;
+  background: var(--accent-light);
 }
 
-/* ─── Description + Copy Wrapper ───────────────────────────────────────── */
+/* ── Description & Copy ───────────────────────────────────────────────── */
 .job-description-wrapper {
-  background: #f9fafb;
-  border-left: 4px solid #00bcd4;
+  background: #f7fafc;
+  border-left: 4px solid var(--accent);
   padding: 1rem;
-  border-radius: 0 6px 6px 0;
-  margin-bottom: 1rem;
   position: relative;
 }
+
 .job-description {
-  font-size: 0.9rem;
-  color: #334e68;
-  line-height: 1.5;
-}
-.job-description p,
-.job-description ul {
-  margin-bottom: 0.75rem;
-}
-.job-description ul {
-  padding-left: 1.25rem;
+  color: var(--txt-primary);
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
-/* ─── Copy Button ───────────────────────────────────────────────────────── */
 .copy-btn {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
+  top: 1rem;
+  right: 1rem;
   background: #e2e8f0;
-  color: #1f2937;
   border: none;
   padding: 0.3rem 0.6rem;
   border-radius: 6px;
-  font-size: 0.85rem;
   cursor: pointer;
-  transition: background 0.2s;
 }
 .copy-btn:hover {
   background: #cbd5e1;
 }
-.copy-btn svg {
-  font-size: 1rem;
-}
 
-/* ─── Actions (Apply / Create CV) ───────────────────────────────────────── */
+/* ── Job Actions ───────────────────────────────────────────────────────── */
 .job-actions {
+  margin-top: auto;
   display: flex;
   gap: 1rem;
+  padding: 1rem;
 }
+
 .apply-link {
-  color: #00bcd4;
-  font-weight: 600;
-  text-decoration: none;
+  background: none;
+  color: var(--accent);
+  text-decoration: underline;
+  padding: 0;
+  border: none;
+  align-self: flex-start;
 }
 .apply-link:hover {
-  text-decoration: underline;
+  color: var(--accent-light);
 }
-.job-card button:not(.toggle-details):not(.copy-btn) {
-  background: #00bcd4;
+
+.btn-cv {
+  background: var(--accent);
   color: #fff;
   border: none;
   padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
   border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background var(--transition);
 }
-.job-card button:not(.toggle-details):not(.copy-btn):hover {
-  background: #0077b6;
+.btn-cv:hover {
+  background: var(--accent-light);
+}
+
+/* ── Focus States ─────────────────────────────────────────────────────── */
+button:focus,
+select:focus,
+.apply-link:focus,
+.btn-cv:focus,
+.toggle-details:focus,
+.copy-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-light);
+  border-radius: 6px;
+}
+
+/* ── Mobile ───────────────────────────────────────────────────────────── */
+@media (max-width: 992px) {
+  .jobs-page {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .filters-sidebar {
+    position: static;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    backdrop-filter: none;
+    top: auto;
+  }
 }

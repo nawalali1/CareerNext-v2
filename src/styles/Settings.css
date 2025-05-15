@@ -1,38 +1,46 @@
-/* Global & Theme Vars */
 :root {
   --bg-page: #f7f9fc;
-  --bg-sidebar: #fff;
+  --bg-sidebar: #ffffff;
   --bg-content: #ffffff;
   --accent: #007c91;
   --accent-light: #eef6fc;
   --text-dark: #102a43;
   --text-muted: #64748b;
-  --border-radius: 12px;
+  --border-radius: 8px;
   --font-body: 'Inter', sans-serif;
   --font-heading: 'Poppins', sans-serif;
 }
 
-/* Layout */
 .settings-container {
   display: flex;
-  min-height: calc(100vh - 70px);
+  min-height: 100vh;
   background: var(--bg-page);
   font-family: var(--font-body);
 }
 
 .settings-sidebar {
-  width: 240px;
+  width: 260px;
   background: var(--bg-sidebar);
-  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  border-right: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.settings-group {
+  margin-bottom: 2rem;
+}
+
+.settings-group-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0.5rem 1.25rem;
+  text-transform: uppercase;
 }
 
 .settings-sidebar ul {
   list-style: none;
-  padding: 1rem 0;
   margin: 0;
+  padding: 0;
 }
 
 .settings-sidebar li {
@@ -42,11 +50,16 @@
   padding: 0.75rem 1.25rem;
   cursor: pointer;
   color: var(--text-dark);
-  transition: background 0.2s;
-  font-weight: 500;
+  transition: background 0.2s, color 0.2s, border-left 0.2s;
+  border-left: 4px solid transparent;
 }
 
-.settings-sidebar li.active,
+.settings-sidebar li.active {
+  background: var(--accent-light);
+  color: var(--accent);
+  border-left: 4px solid var(--accent);
+}
+
 .settings-sidebar li:hover {
   background: var(--accent-light);
   color: var(--accent);
@@ -56,32 +69,6 @@
   font-size: 1.25rem;
 }
 
-.settings-bottom {
-  padding: 1rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.settings-support,
-.settings-logout {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.settings-support:hover,
-.settings-logout:hover {
-  color: var(--accent);
-}
-
-/* Main content area */
 .settings-content {
   flex: 1;
   padding: 2rem;
@@ -92,7 +79,7 @@
 .settings-card {
   background: var(--bg-content);
   border-radius: var(--border-radius);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   padding: 2rem;
   margin-bottom: 2rem;
 }
@@ -101,63 +88,155 @@
   font-family: var(--font-heading);
   font-size: 1.75rem;
   color: var(--accent);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Form & Buttons */
 .settings-card label {
   display: block;
   margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-dark);
 }
 
 .settings-card input[type="text"],
 .settings-card input[type="password"],
-.settings-card select {
+.settings-card input[type="email"],
+.settings-card input[type="tel"],
+.settings-card select,
+.settings-card input[type="file"] {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-top: 0.5rem;
+}
+
+.settings-card input:focus,
+.settings-card select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0, 124, 145, 0.1);
+  outline: none;
+}
+
+.settings-card img {
+  display: block;
+  margin: 0.75rem 0;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+/* Button group */
+.settings-card .button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.settings-card .button-group button {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+}
+
+.settings-card .button-group .save-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.settings-card .button-group .save-btn:hover {
+  background: #006977;
+}
+
+.settings-card .button-group .cancel-btn {
+  background: #e5e7eb;
   color: var(--text-dark);
 }
 
+.settings-card .button-group .cancel-btn:hover {
+  background: #d2d4d8;
+}
+
+/* Toggle-row */
 .toggle-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 1.25rem 0;
+  margin: 1rem 0;
 }
 
+/* Standard buttons */
+.settings-card button,
 .connect-btn {
+  margin-top: 1rem;
   padding: 0.5rem 1rem;
   background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.connect-btn:hover {
-  background: darken(var(--accent), 10%);
-}
-
-.settings-card button {
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-.settings-card button:hover {
-  background: darken(var(--accent), 10%);
+.settings-card button:hover,
+.connect-btn:hover {
+  background: #005f73;
 }
 
 button.danger {
@@ -168,6 +247,7 @@ button.danger:hover {
   background: #b50f35;
 }
 
+/* Message */
 .settings-message {
   margin-top: 1rem;
   padding: 0.75rem 1rem;
@@ -177,23 +257,40 @@ button.danger:hover {
   font-size: 0.95rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .settings-container {
-    flex-direction: column;
-  }
-  .settings-sidebar {
-    flex-direction: row;
-    width: auto;
-    overflow-x: auto;
-  }
-  .settings-sidebar ul {
-    display: flex;
-  }
-  .settings-sidebar li {
-    padding: 1rem;
-  }
-  .settings-content {
-    padding: 1rem;
-  }
+/* ─── Dark mode variable overrides (lighter accent) ─── */
+:root[data-theme="dark"] {
+  --bg-page: #121212;
+  --bg-sidebar: #1e1e1e;
+  --bg-content: #1c1c1c;
+  --accent: #4da6ff;       /* lighter blue for contrast */
+  --accent-light: #336bbf;
+  --text-dark: #eceff4;
+  --text-muted: #a3a3a3;
+}
+
+/* ─── Dark-mode specific fixes ─── */
+/* Toggle track darker, knob and text brighter */
+:root[data-theme="dark"] .slider {
+  background-color: #444;
+}
+
+:root[data-theme="dark"] .slider:before {
+  background-color: #eceff4;
+}
+
+:root[data-theme="dark"] .settings-card input,
+:root[data-theme="dark"] .settings-card select {
+  background-color: #2a2a2a;
+  color: var(--text-dark);
+  border-color: #555;
+}
+
+:root[data-theme="dark"] .settings-card label,
+:root[data-theme="dark"] .settings-card h2,
+:root[data-theme="dark"] .toggle-row span {
+  color: var(--text-dark);
+}
+
+:root[data-theme="dark"] .settings-card {
+  box-shadow: 0 2px 8px rgba(255,255,255,0.1);
 }

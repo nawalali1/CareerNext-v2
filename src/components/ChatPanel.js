@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 export default function ChatPanel() {
   const [open, setOpen]       = useState(false);
   const [msgs, setMsgs]       = useState([
-    { from: 'bot', text: '👋 Paste your job brief and hit 🔄 to reword.' },
+    { from: 'bot', text: 'Paste your job brief and hit 🔄 to reword.' },
   ]);
   const [input, setInput]     = useState('');
   const [loading, setLoading] = useState(false);
