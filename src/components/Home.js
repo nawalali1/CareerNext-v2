@@ -176,7 +176,6 @@ export default function Home() {
               <p className="job-count">Loading job count…</p>
             )}
 
-            {/* Original CTAs */}
             <div className="hero-ctas">
               <button
                 className="primary-btn"
@@ -191,9 +190,18 @@ export default function Home() {
                 Map Your Degree
               </button>
             </div>
+
+            <p className="github-link">
+              <a
+                href="https://github.com/nawalali1/CareerNext-v2.git"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View source on GitHub
+              </a>
+            </p>
           </div>
 
-          {/* ↓ Scroll indicator */}
           <div
             className="scroll-indicator"
             onClick={() =>
@@ -306,7 +314,7 @@ export default function Home() {
               <p>
                 <strong>CareerNext</strong> is a platform dedicated to helping
                 students, graduates, and career switchers find their ideal job
-                paths. Founded in 2021, our mission is to combine AI-driven
+                paths. Founded in 2025, our mission is to combine AI-driven
                 quizzes, a live job board, and one-click CV generation to
                 streamline your job search.
               </p>
