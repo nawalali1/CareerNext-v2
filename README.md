@@ -1,103 +1,156 @@
-# CareerNext
+CareerNext is a web application that helps users explore suitable career paths, view live job listings and build a tailored CV with AI support. It focuses on giving users clear guidance when they feel unsure about next steps in their career.
 
-> AI-powered career discovery and CV builder  
-> Developed as a third-year Computer Science project
+Live site: https://careernext-next.vercel.app
 
----
+Overview
 
-## Table of Contents
+The application guides users through a six-question quiz, generates a ranked list of career matches and links those roles directly to live job vacancies. Users can then create a personalised CV through a simple three-step builder, with optional AI-generated summaries and bullet points. The interface is clean, fully responsive and works well on both desktop and mobile.
 
-1. [Overview](#overview)  
-2. [Features](#features)  
-3. [Technology Stack](#technology-stack)  
-4. [Prerequisites](#prerequisites)  
-5. [Installation and Setup](#installation-and-setup)  
-6. [Environment Variables](#environment-variables)  
-7. [Usage](#usage)  
-8. [Testing](#testing)  
-9. [Deployment](#deployment)  
-10. [Contributing](#contributing)  
-11. [License](#license)  
+CareerNext uses a small set of serverless API routes for job retrieval, AI functions and PDF generation. Authentication is handled with Firebase, giving users access to protected areas such as the CV builder and settings.
 
----
+Features
+Career Quiz
 
-## Overview
+Six-question multi-step flow
 
-**CareerNext** is a Next.js application that helps students, graduates and career-changers discover roles that align with their preferences. It combines:
+Back/Next navigation
 
-- A six-question quiz to capture work-style and motivational factors.  
-- AI-driven recommendations powered by Google GenAI (Gemini) and OpenAI.  
-- A live job board fetching real listings and filtering by career and location.  
-- A one-click CV builder with AI assistance, PDF export and preview.  
+Visual progress indicator
 
-This project demonstrates modern web development practices, third-party AI integration and a polished user experience.
+Results Page
 
----
+Ranked career recommendations
 
-## Features
+“Learn More” modal with short role descriptions
 
-### 1. Quick Quiz  
-- Six multiple-choice questions.  
-- Progress bar indicates completion percentage.  
-- Responsive “Back” and “Next” navigation.  
+Button to jump directly to filtered job listings
 
-### 2. Results Page  
-- Displays the top five career matches.  
-- “Learn More” modal with concise explanations.  
-- “View Jobs” button auto-filters the job board by the selected career title.  
+Live Job Board
 
-### 3. Live Job Board  
-- Fetches up-to-date listings via `/api/jobs` endpoints.  
-- Filters by role (from the quiz) and by location text input.  
-- Autocomplete suggestions as you type.  
-- Live count of matching roles.  
+Real job data from Adzuna
 
-### 4. CV Builder  
-- Three-step wizard: Contact Details, Professional Summary, Qualifications.  
-- AI-assistant drawer prompts you to paste a job brief or ask for bullet points.  
-- In-browser PDF export via html2canvas + jsPDF.  
-- Live preview in A4 format.  
+Role and location filtering
 
-### 5. Error Handling  
-- Global `ErrorBoundary` catches unexpected React errors.  
-- Friendly fallback UI with a reload button and error details.  
-- Network-error handling on data fetches with user-friendly messages.  
+Autocomplete suggestions
 
-### 6. Theming & Responsiveness  
-- Light/dark theme persisted in `localStorage`.  
-- Fully responsive across desktop, tablet and mobile.  
+Total count of matching roles
 
----
+CV Builder
 
-## Technology Stack
+Three steps: Contact Details, Summary, Qualifications
 
-- **Framework**: [Next.js](https://nextjs.org/)  
-- **UI**: React, React Hooks, CSS custom properties, CSS Modules  
-- **Icons**: react-icons  
-- **AI Integration**:  
-  - Google GenAI (Gemini) via `@google/genai`  
-  - OpenAI via `openai` npm package  
-- **PDF Export**: html2canvas + jsPDF  
-- **State Management**: React `useState`, `useReducer`  
-- **Routing & Data Fetching**: Next.js pages & API routes  
-- **Authentication Guard**: Custom `PrivateRoute` component  
-- **Testing**: Jest & React Testing Library (to be added)  
-- **Deployment**: Vercel (recommended)  
+AI drawer that generates summaries or bullet points
 
----
+A4 live preview
 
-## Prerequisites
+PDF export using html2canvas and jsPDF
 
-- **Node.js** v16 or later  
-- **npm** v8 or later  
-- An **OpenAI** API key  
-- A Google Cloud project with the **GenAI API** enabled and an API key  
+AI Integration
 
----
+Google Gemini for career recommendations
 
-## Installation and Setup
+OpenAI for rewriting and summarising CV content
 
-1. **Clone the repository**  
-   ```bash
-   git clone https://github.com/nawalali1/CareerNext-v2.git
-   cd CareerNext-v2
+Authentication and Routing
+
+Email and password sign-in via Firebase
+
+PrivateRoute protecting selected pages
+
+No user data stored beyond authentication
+
+Error Handling
+
+Global ErrorBoundary
+
+Fallback UI with reload option
+
+Theming and Responsiveness
+
+Light/dark theme toggle
+
+Fully responsive layout
+
+Deployment
+
+Hosted on Vercel
+
+API routes run as serverless functions
+
+Tech Stack
+
+Next.js (pages router)
+
+React with Hooks
+
+CSS Modules
+
+Firebase Authentication
+
+Adzuna API
+
+Google Gemini
+
+OpenAI Node client
+
+html2canvas + jsPDF
+
+react-icons
+
+Installation
+git clone https://github.com/nawalali1/careernext-next.git
+cd careernext-next
+npm install
+
+Environment Variables
+
+Create a .env.local file and add the required values:
+
+Firebase web credentials
+
+Adzuna app ID and key
+
+Google Gemini API key
+
+OpenAI API key
+
+Names should match those used in your local environment. Keep these keys private.
+
+Usage
+
+Start the development server:
+
+npm run dev
+
+
+Then open:
+
+http://localhost:3000
+
+
+Typical flow:
+
+Sign up or log in
+
+Complete the quiz
+
+View career matches
+
+Browse live job listings
+
+Build a CV
+
+Use AI assistance if needed
+
+Export the CV as a PDF
+
+Deployment
+
+CareerNext is deployed on Vercel:
+
+https://careernext-next.vercel.app
+
+Deployment commands:
+
+npm run build
+vercel deploy
