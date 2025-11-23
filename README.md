@@ -133,3 +133,10 @@ Copy code
 npm run build
 vercel deploy
 
+## Author
+
+Nawal
+- GitHub: [@nawalali1](https://github.com/nawalali1)
+- LinkedIn: www.linkedin.com/in/nawal-ali-871a09332
+
+
