@@ -133,7 +133,6 @@ Copy code
 npm run build
 vercel deploy
 
-## Author
 
 Nawal
 - GitHub: [@nawalali1](https://github.com/nawalali1)
